@@ -7,6 +7,7 @@
 #include <vector>
 #include <deque>
 #include <unordered_map>
+#include <unordered_set>
 
 
 struct Stop
@@ -45,7 +46,18 @@ struct Bus
 	}
 };
 
+struct RouteLengthInformation {
+	int route_lenght;
+	double curvature;
+};
 
+//struct RouteLengthInformationHasher {
+//	static const int N = 42;
+//	std::size_t operator() (const std::string_view& route) {
+//		return sv_hasher(route) * N;
+//	}
+//	std::hash<std::string_view> sv_hasher;
+//};
 
 
 class TransportCatalogue {
@@ -53,9 +65,9 @@ public:
 
 	TransportCatalogue() = default;
 
-	Stop* AddStop(Stop stop);
+	Stop* AddStop(Stop& stop);
 
-	Bus* AddBus(Bus&& bus);
+	Bus* AddBus(Bus& bus);
 
 	Bus& GetBus(std::string_view str);
 
@@ -63,25 +75,15 @@ public:
 
 	std::ostream& GetRouteInformation(std::ostream& os, std::string_view str);
 
-	std::vector<Bus*>& GetBusesByStop(Stop& stop);
+	const std::vector<Bus*>& GetBusesByStop(Stop& stop);
 
-	void AddDistance(std::string_view root_stop_name, std::vector<std::pair<std::string_view, int>> stopname_to_dist);
+	void AddDistance(std::string_view root_stop_name, const std::vector<std::pair<std::string_view, int>>& stopname_to_dist);
 
 	int GetDistance(const std::pair<Stop*, Stop*> stops_between) const;
 
-	
+	void AddRouteLength(std::string_view name, RouteLengthInformation length);
 
-
-
-	std::deque<Bus> _GetBuses() const;
-
-	std::unordered_map<std::string_view, Bus*> _GetBusesMap() const;
-
-	std::deque<Stop> _GetStops() const;
-
-	std::unordered_map<std::string_view, Stop*> _GetMap() const;
-
-	const std::unordered_map<std::pair<Stop*, Stop*>, int, StopPairHasher>& _GetStopsToDist() const;
+	const RouteLengthInformation& GetRouteLength(std::string_view name) const;
 
 private:
 
@@ -91,6 +93,6 @@ private:
 	std::unordered_map<std::string_view, Bus*> busname_to_bus_;
 	std::unordered_map<Stop*, std::vector<Bus*>> stop_to_bus_;
 	std::unordered_map<std::pair<Stop*, Stop*>, int, StopPairHasher> stops_to_distance_;
-
+	std::unordered_map<std::string_view, RouteLengthInformation> route_length_information_;
 };
 

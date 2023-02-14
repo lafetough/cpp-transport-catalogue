@@ -16,7 +16,7 @@ using namespace input_processing;
 using namespace thread_reading;
 using namespace stop_parsing;
 using namespace bus_parsing;
-
+/*
 std::string ReadLineT(std::ifstream& in) {
 	std::string s;
 	std::getline(in, s);
@@ -221,61 +221,27 @@ namespace tests {
 		CorrectAddDistance();
 	}
 }
-
+*/
 
 int main() {
-
-
 	
-	tests::StartTests();
+	//tests::StartTests();
 
-	int num = ReadLineWithNumber();
+	int num = ReadLineWithNumber(std::cin);
 	vector<string> requests;
 	requests.reserve(num);
 	vector<string_view> bus_requests;
 
 
 	for (int i = 0; i < num; ++i) {
-		requests.push_back(ReadLine());
+		requests.push_back(ReadLine(std::cin));
 	}
 
 	TransportCatalogue catalouge;
 
-	//добавление остановок 
-	
-	for (std::string_view sv : requests) {
-		if (Identifaer(sv) == Instruction::STOP) {
-			catalouge.AddStop(StopParsing(sv));
-		}
-	}
+	FillTransportCatalogue(requests, catalouge);
 
-	// добавление расстояний
-	for (std::string_view sv : requests) {
-		if (Identifaer(sv) == Instruction::STOP) {
-			catalouge.AddDistance(NameParcing(sv), DistancesParsing(sv));
-		}
-	}
-	// добавление маршрутов
-	for (std::string_view sv : requests) {
-		Instruction identifaer = Identifaer(sv);
-		if (identifaer != Instruction::STOP) {
-			catalouge.AddBus(BusParsing(sv, identifaer, catalouge));
-		}
-	}
+	num = ReadLineWithNumber(std::cin);
 
-	num = ReadLineWithNumber();
-
-	for (int i = 0; i < num; ++i) {
-		using namespace output_processing;
-		string request = ReadLine();
-		output_processing::Instruction identifaer = output_processing::Identifaer(request);
-		if (identifaer == output_processing::Instruction::STOP) {
-			std::string_view sv(request);
-			stop::Information(std::cout, sv, catalouge);
-		}
-		else {
-			std::string_view sv(request);
-			bus::Information(std::cout, catalouge.GetBus(NameParsing(sv)), catalouge);
-		}
-	}
+	output_processing::ExecuteRequests(num, catalouge);
 }

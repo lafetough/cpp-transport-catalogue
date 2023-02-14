@@ -8,7 +8,7 @@ bool Stop::empty() {
 	return stop_name.empty();
 }
 
-Stop* TransportCatalogue::AddStop(Stop stop) {
+Stop* TransportCatalogue::AddStop(Stop& stop) {
 	Stop* stop_ptr = &stops_original_storage_.emplace_back(std::move(stop));
 	stopname_to_stop[stop_ptr->stop_name] = stop_ptr;
 	stop_to_bus_[stop_ptr];
@@ -16,7 +16,7 @@ Stop* TransportCatalogue::AddStop(Stop stop) {
 }
 
 
-Bus* TransportCatalogue::AddBus(Bus&& bus) {
+Bus* TransportCatalogue::AddBus(Bus& bus) {
 	Bus* bus_ptr = &buses_original_storage_.emplace_back(std::move(bus));
 	busname_to_bus_[bus_ptr->bus_name] = bus_ptr;
 	for (Stop*& stop : bus_ptr->stops_on_route) {
@@ -53,10 +53,10 @@ Stop& TransportCatalogue::GetStop(std::string_view str) {
 
 std::ostream& TransportCatalogue::GetRouteInformation(std::ostream& os, std::string_view str) {
 	Bus bus = GetBus(str);
-	return output_processing::bus::Information(os, bus, *this);
+	return output_processing::bus::PrintInformation(os, bus, *this);
 }
 
-std::vector<Bus*>& TransportCatalogue::GetBusesByStop(Stop& stop) {
+const std::vector<Bus*>& TransportCatalogue::GetBusesByStop(Stop& stop) {
 	try
 	{
 		return stop_to_bus_.at(&stop);
@@ -68,7 +68,7 @@ std::vector<Bus*>& TransportCatalogue::GetBusesByStop(Stop& stop) {
 	}
 }
 
-void TransportCatalogue::AddDistance(std::string_view root_stop_name, std::vector<std::pair<std::string_view, int>> stopname_to_dist) {
+void TransportCatalogue::AddDistance(std::string_view root_stop_name, const std::vector<std::pair<std::string_view, int>>& stopname_to_dist) {
 	for (const auto [name, dist] : stopname_to_dist) { 
 		std::pair<Stop*, Stop*> stops_pair = { &GetStop(root_stop_name), &GetStop(name) };
 		stops_to_distance_[stops_pair] = dist;
@@ -84,19 +84,11 @@ int TransportCatalogue::GetDistance(const std::pair<Stop*, Stop*> stops_between)
 	}
 }	
 
-std::deque<Bus> TransportCatalogue::_GetBuses() const {
-	return buses_original_storage_;
-}
-std::unordered_map<std::string_view, Bus*> TransportCatalogue::_GetBusesMap() const {
-	return busname_to_bus_;
-}
-std::deque<Stop> TransportCatalogue::_GetStops() const {
-	return stops_original_storage_;
+void TransportCatalogue::AddRouteLength(std::string_view name, RouteLengthInformation length) {
+	route_length_information_[name] = length;
 }
 
-std::unordered_map<std::string_view, Stop*> TransportCatalogue::_GetMap() const {
-	return stopname_to_stop;
+const RouteLengthInformation& TransportCatalogue::GetRouteLength(std::string_view name) const {
+	return route_length_information_.at(name);
 }
-const std::unordered_map<std::pair<Stop*, Stop*>, int, StopPairHasher>& TransportCatalogue::_GetStopsToDist() const {
-	return stops_to_distance_;
-}
+

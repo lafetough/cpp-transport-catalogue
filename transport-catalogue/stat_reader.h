@@ -11,14 +11,16 @@ namespace output_processing {
 		BUS
 	};
 
-	Instruction Identifaer(std::string_view str);
+	void ExecuteRequests(const int num, TransportCatalogue& catalouge);
 
-	std::string NameParsing(std::string_view str);
+	Instruction ParseInstructionType(std::string_view str);
+
+	std::string ParseName(std::string_view str);
 
 	namespace bus {
-		std::ostream& Information(std::ostream& os, const Bus& bus, TransportCatalogue& catalouge);
+		std::ostream& PrintInformation(std::ostream& os, const Bus& bus, TransportCatalogue& catalouge);
 	}
 	namespace stop {
-		std::ostream& Information(std::ostream& os, std::string_view& stop, TransportCatalogue& catalouge);
+		std::ostream& PrintInformation(std::ostream& os, std::string_view& stop, TransportCatalogue& catalouge);
 	}
 }

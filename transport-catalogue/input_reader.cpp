@@ -3,21 +3,58 @@
 #include <execution>
 #include <algorithm>
 
-std::string input_processing::thread_reading::ReadLine() {
+std::string input_processing::thread_reading::ReadLine(std::istream& in) {
 	std::string s;
-	std::getline(std::cin, s);
+	std::getline(in, s);
 	return s;
 }
-int input_processing::thread_reading::ReadLineWithNumber() {
+int input_processing::thread_reading::ReadLineWithNumber(std::istream& in) {
 	int result = 0;
-	std::cin >> result;
-	ReadLine();
+	in >> result;
+	ReadLine(in);
 	return result;
 }
 
-input_processing::Instruction input_processing::Identifaer(std::string_view str) {
+RouteLengthInformation input_processing::bus_parsing::ComputeRouteLength(const Bus& bus, TransportCatalogue& catalouge) {
+	double geo_distance = 0.0;
+	int total_route_lenght = 0;
+	for (int i = 0; i < bus.stops_on_route.size() - 1; ++i) {
+		geo_distance += ComputeDistance(bus.stops_on_route[i]->cooradinates, bus.stops_on_route[i + 1]->cooradinates);
+		total_route_lenght += catalouge.GetDistance({ bus.stops_on_route[i] , bus.stops_on_route[i + 1] });
+	}
+	return { total_route_lenght, total_route_lenght / geo_distance };
+}
+
+void input_processing::FillTransportCatalogue(const std::vector<std::string>& requests, TransportCatalogue& catalouge) {
+	//добавление остановок 
+
+	for (std::string_view sv : requests) {
+		if (ParseInstructionType(sv) == Instruction::STOP) {
+			auto stop = stop_parsing::ParseStop(sv);
+			catalouge.AddStop(stop);
+		}
+	}
+
+	// добавление расстояний
+	for (std::string_view sv : requests) {
+		if (ParseInstructionType(sv) == Instruction::STOP) {
+			catalouge.AddDistance(ParseName(sv), stop_parsing::ParseDistances(sv));
+		}
+	}
+	// добавление маршрутов
+	for (std::string_view sv : requests) {
+		Instruction identifaer = ParseInstructionType(sv);
+		if (identifaer != Instruction::STOP) {
+			auto bus = bus_parsing::ParseBus(sv, identifaer, catalouge);
+			Bus* bus_ptr = catalouge.AddBus(bus);
+			catalouge.AddRouteLength(bus_ptr->bus_name, bus_parsing::ComputeRouteLength(*bus_ptr, catalouge));
+		}
+	}
+}
+
+input_processing::Instruction input_processing::ParseInstructionType(std::string_view str) {
 	using namespace input_processing;
-	size_t first_sign = str.find_first_not_of(' ');
+	size_t first_sign = str.find_first_not_of(' ');		
 	auto command = str.substr(first_sign, str.find_first_of(' ', first_sign) - first_sign);
 	if (command == "Stop") {
 		return Instruction::STOP;
@@ -33,7 +70,7 @@ input_processing::Instruction input_processing::Identifaer(std::string_view str)
 	throw std::invalid_argument("Invalid cammand");
 }
 
-std::string_view input_processing::NameParcing(std::string_view& str) {
+std::string_view input_processing::ParseName(std::string_view& str) {
 	str.remove_prefix(str.find_first_not_of(' ')); //Удаляем пробелы вначале
 	str.remove_prefix(str.find(' ') + 1); //Удаляем "Bus " или "Stop "
 	size_t begin = str.find_first_not_of(' ');
@@ -46,7 +83,7 @@ std::string_view input_processing::NameParcing(std::string_view& str) {
 	return name;
 }
 
-std::pair<std::string_view, int> input_processing::stop_parsing::ParticalDistanceParcing(std::string_view str) {
+std::pair<std::string_view, int> input_processing::stop_parsing::ParseDistance(std::string_view str) {
 	size_t new_end = str.find(' ');
 	int distance = std::stoi(std::string(str.substr(0, new_end - 1)));
 	size_t new_begin = str.find_first_not_of(' ', new_end);
@@ -57,9 +94,9 @@ std::pair<std::string_view, int> input_processing::stop_parsing::ParticalDistanc
 	return { str.substr(new_begin, str.size() - new_begin), distance };
 }
 
-std::vector<std::pair<std::string_view, int>> input_processing::stop_parsing::DistancesParsing(std::string_view str ) {
-	NameParcing(str); 
-	CoordinatesParsing(str); // удаляем координаты
+std::vector<std::pair<std::string_view, int>> input_processing::stop_parsing::ParseDistances(std::string_view str ) {
+	ParseName(str);
+	ParseCoordinates(str); // удаляем координаты
 	if (str.empty()) {
 		return {};
 	}
@@ -67,15 +104,15 @@ std::vector<std::pair<std::string_view, int>> input_processing::stop_parsing::Di
 	size_t begin = str.find_first_not_of(' ');
 	size_t end = str.find(',', begin);
 	while (end != std::string_view::npos) {
-		distance.push_back(ParticalDistanceParcing(str.substr(begin, end - begin)));
+		distance.push_back(ParseDistance(str.substr(begin, end - begin)));
 		begin = str.find_first_not_of(' ', end + 1);
 		end = str.find(',', begin);
 	}
-	distance.push_back(ParticalDistanceParcing(str.substr(begin, str.size() - begin)));
+	distance.push_back(ParseDistance(str.substr(begin, str.size() - begin)));
 	return distance;
 }
 
-Coordinates input_processing::stop_parsing::CoordinatesParsing(std::string_view& str) {
+Coordinates input_processing::stop_parsing::ParseCoordinates(std::string_view& str) {
 	// находим широту
 	size_t begin = str.find_first_not_of(' '); 
 	size_t end = str.find(',', begin);
@@ -91,14 +128,14 @@ Coordinates input_processing::stop_parsing::CoordinatesParsing(std::string_view&
 	return { lat, lng };
 }
 
-Stop input_processing::stop_parsing::StopParsing(std::string_view str) {
-	Stop stop = { std::string(NameParcing(str)), CoordinatesParsing(str) };
+Stop input_processing::stop_parsing::ParseStop(std::string_view str) {
+	Stop stop = { std::string(ParseName(str)), ParseCoordinates(str) };
 	return stop;
 }
 
-Bus input_processing::bus_parsing::BusParsing(std::string_view str, input_processing::Instruction instruction, TransportCatalogue& catalouge) {
+Bus input_processing::bus_parsing::ParseBus(std::string_view str, input_processing::Instruction instruction, TransportCatalogue& catalouge) {
 
-	std::string name = std::string(NameParcing(str));
+	std::string name = std::string(ParseName(str));
 	Bus bus;
 	bus.bus_name = std::move(name);
 	if (instruction == input_processing::Instruction::BUS_RETURNING) {

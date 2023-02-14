@@ -3,9 +3,25 @@
 #include "input_reader.h"
 #include <algorithm>
 #include <execution>
+#include <iostream>
 
+void output_processing::ExecuteRequests(const int num, TransportCatalogue& catalouge) {
+	for (int i = 0; i < num; ++i) {
+		using namespace output_processing;
+		std::string request = input_processing::thread_reading::ReadLine(std::cin);
+		output_processing::Instruction identifaer = output_processing::ParseInstructionType(request);
+		if (identifaer == output_processing::Instruction::STOP) {
+			std::string_view sv(request);
+			stop::PrintInformation(std::cout, sv, catalouge);
+		}
+		else {
+			std::string_view sv(request);
+			bus::PrintInformation(std::cout, catalouge.GetBus(ParseName(sv)), catalouge);
+		}
+	}
+}
 
-std::ostream& output_processing::bus::Information(std::ostream& os, const Bus& bus, TransportCatalogue& catalouge) {
+std::ostream& output_processing::bus::PrintInformation(std::ostream& os, const Bus& bus, TransportCatalogue& catalouge) {
 	if (bus.stops_on_route.empty()) {
 		os << "Bus " << bus.bus_name << ": not found" << std::endl;
 		return os;
@@ -13,18 +29,13 @@ std::ostream& output_processing::bus::Information(std::ostream& os, const Bus& b
 	std::unordered_set<Stop*> unique(bus.stops_on_route.begin(), bus.stops_on_route.end());
 	os << "Bus " << bus.bus_name.data() << ": " << bus.stops_on_route.size() << " stops on route, ";
 	os << unique.size() << " unique stops, ";
-	double geo_distance = 0.0;
-	int total_route_lenght = 0;
-	for (int i = 0; i < bus.stops_on_route.size() - 1; ++i) {
-		geo_distance += ComputeDistance(bus.stops_on_route[i]->cooradinates, bus.stops_on_route[i + 1]->cooradinates);
-		total_route_lenght += catalouge.GetDistance({ bus.stops_on_route[i] , bus.stops_on_route[i + 1] });
-	}
-	os << total_route_lenght << " route length, " << total_route_lenght / geo_distance << " curvature" << std::endl;
+	auto& route = catalouge.GetRouteLength(bus.bus_name);
+	os << route.route_lenght << " route length, " << route.curvature << " curvature" << std::endl;
 
 	return os;
 }
 
-output_processing::Instruction output_processing::Identifaer(std::string_view str) {
+output_processing::Instruction output_processing::ParseInstructionType(std::string_view str) {
 	size_t first_sign = str.find_first_not_of(' ');
 	auto command = str.substr(first_sign, str.find_first_of(' ', first_sign) - first_sign);
 	if (command == "Stop") {
@@ -35,7 +46,7 @@ output_processing::Instruction output_processing::Identifaer(std::string_view st
 	}
 }
 
-std::string output_processing::NameParsing(std::string_view str) {
+std::string output_processing::ParseName(std::string_view str) {
 	size_t begin = str.find_first_not_of(' ');
 	size_t end = str.find(' ', begin);
 	str.remove_prefix(end);
@@ -44,9 +55,9 @@ std::string output_processing::NameParsing(std::string_view str) {
 	return std::string(str.substr(begin, end - begin));
 }
 
-std::ostream& output_processing::stop::Information(std::ostream& os, std::string_view& stop, TransportCatalogue& catalouge) {
+std::ostream& output_processing::stop::PrintInformation(std::ostream& os, std::string_view& stop, TransportCatalogue& catalouge) {
 	using namespace std::literals;
-	std::string name = NameParsing(stop);
+	std::string name = ParseName(stop);
 	Stop& stop_getted = catalouge.GetStop(name);
 	os << "Stop "s << name << ": "s;
 	if (stop_getted.empty()) {
