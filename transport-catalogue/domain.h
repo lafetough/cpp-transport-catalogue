@@ -42,7 +42,7 @@ struct RouteLengthInformation {
 
 struct BusStat
 {
-	double curvuture;
+	double curvature;
 	int route_length;
 	size_t stops_count;
 	size_t unique_stops_count;

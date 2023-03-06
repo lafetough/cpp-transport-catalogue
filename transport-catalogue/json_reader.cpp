@@ -209,7 +209,7 @@ namespace json_reader {
 
 		Dict CreateJsonElem(const BusStat& stat, const int request_id) {
 			Dict answer;
-			answer["curvature"s] = Node(stat.curvuture);
+			answer["curvature"s] = Node(stat.curvature);
 			answer["request_id"s] = Node(request_id);
 			answer["route_length"s] = Node(stat.route_length);
 			answer["stop_count"s] = Node(static_cast<int>(stat.stops_count));
