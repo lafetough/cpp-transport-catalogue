@@ -21,13 +21,8 @@ int main() {
 	
 	TransportCatalogue catalogue_;
 
-	//tests::Start();
-
-	//std::ifstream file("C:\\Users\\NyaRoar\\source\\repos\\Project\\Project\\input.json"s);
-
-
-
-	json::Document doc = json::Load(std::cin);
+	
+	json::Document doc = json_reader::JsonRead(cin);
 
 	json_reader::FillTransportCatalogue(doc, catalogue_);
 

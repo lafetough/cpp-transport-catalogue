@@ -5,7 +5,7 @@
 #include "map_renderer.h"
 #include "request_handler.h"
 
-namespace json_reader{
+namespace json_reader {
 
 	using namespace json;
 
@@ -13,16 +13,16 @@ namespace json_reader{
 
 	void FillTransportCatalogue(const Document& json_input, TransportCatalogue& catalouge);
 
-	Array HandleRequest(const Document& json_doc, RequestHandler& catalogue);
+	json::Node HandleRequest(const Document& json_doc, RequestHandler& catalogue);
 
-	Dict ReadMapRequest(const RequestHandler& rh);
+	json::Node ReadMapRequest(const RequestHandler& rh, const int request_id);
 
 	namespace json_create {
 
-		Dict CreateJsonElem(const BusStat& stat, const int request_id);
-		Dict CreateJsonElem(const std::unordered_set<Bus*>& buses, const int request_id);
+		Node CreateJsonElem(const BusStat& stat, const int request_id);
+		Node CreateJsonElem(const std::unordered_set<Bus*>& buses, const int request_id);
 
-		Dict NotFound(const int request_id);
+		Node NotFound(const int request_id);
 	}
 	void PrintAnswer(const Document& json_doc, RequestHandler& catalogue, std::ostream& out);
 

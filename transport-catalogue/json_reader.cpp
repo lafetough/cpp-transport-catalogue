@@ -3,6 +3,7 @@
 #include <sstream>
 #include <algorithm>
 #include "map_renderer.h"
+#include "json_builder.h"
 
 using namespace std::literals;
 
@@ -15,15 +16,13 @@ namespace json_reader {
 		return json_doc;
 	}
 
-
-
 	void FillTransportCatalogue(const Document& json_doc, TransportCatalogue& catalogue) {
-		
-		const Array& base_array = json_doc.GetRoot().AsMap().at("base_requests"s).AsArray();
+
+		const Array& base_array = json_doc.GetRoot().AsDict().at("base_requests"s).AsArray();
 
 		// добавление остановок
 		for (const Node& node : base_array) {
-			const Dict& dict = node.AsMap();
+			const Dict& dict = node.AsDict();
 
 			//пропускаем автобусы
 			try {
@@ -35,18 +34,18 @@ namespace json_reader {
 				throw std::invalid_argument("There are no this type identifaer");
 			}
 
-			Stop stop = { dict.at("name").AsString(), Coordinates {dict.at("latitude").AsDouble(), dict.at("longitude").AsDouble()}};
+			Stop stop = { dict.at("name").AsString(), Coordinates {dict.at("latitude").AsDouble(), dict.at("longitude").AsDouble()} };
 
 			catalogue.AddStop(stop);
 		}
 
 		// добавление расстояний
 		for (const Node& node : base_array) {
-			const Dict& dict = node.AsMap();
+			const Dict& dict = node.AsDict();
 			if (dict.at("type").AsString() == "Stop") {
 				std::vector<std::pair<std::string_view, int>> stopname_to_dist;
 
-				const auto distances = dict.at("road_distances").AsMap();
+				const auto distances = dict.at("road_distances").AsDict();
 				for (const auto& [station_name, distance] : distances) {
 					stopname_to_dist.push_back({ station_name, distance.AsInt() });
 				}
@@ -56,7 +55,7 @@ namespace json_reader {
 
 		//добавление автобусов 
 		for (const Node& node : base_array) {
-			const Dict& dict = node.AsMap();
+			const Dict& dict = node.AsDict();
 			if (dict.at("type").AsString() == "Bus") {
 				std::vector<Stop*> stops_ptr;
 				for (const auto& stop : dict.at("stops").AsArray()) {
@@ -69,14 +68,14 @@ namespace json_reader {
 						stops_ptr.push_back(*it);
 					}
 				}
-				Bus* bus_ptr = catalogue.AddBus({ dict.at("name").AsString(), stops_ptr, dict.at("is_roundtrip").AsBool()});
+				Bus* bus_ptr = catalogue.AddBus({ dict.at("name").AsString(), stops_ptr, dict.at("is_roundtrip").AsBool() });
 				catalogue.AddRouteLength(bus_ptr->bus_name, catalogue.ComputeRouteLength(*bus_ptr));
 			}
 		}
 
 	}
 
-	Array HandleRequest(const Document& json_doc, RequestHandler& handler) {
+	/*Array HandleRequest(const Document& json_doc, RequestHandler& handler) {
 
 		Array requsets = json_doc.GetRoot().AsMap().at("stat_requests"s).AsArray();
 
@@ -115,11 +114,51 @@ namespace json_reader {
 			}
 		}
 		return json_answer;
-	}	
+	}	*/
+
+	json::Node HandleRequest(const Document& json_doc, RequestHandler& handler) {
+
+		Array requsets = json_doc.GetRoot().AsDict().at("stat_requests"s).AsArray();
+
+		Array json_answer;
+
+		for (const Node& node : requsets) {
+			const Dict& request = node.AsDict();
+			int request_id = request.at("id").AsInt();
+
+			if (request.at("type"s).AsString() == "Bus"s) {
+				const std::optional<BusStat>& stat = handler.GetBusStat(request.at("name"s).AsString());
+				if (!stat) {
+					json_answer.emplace_back(std::move(json_create::NotFound(request_id)));
+					continue;
+				}
+				Node answer = json_create::CreateJsonElem(*stat, request_id);
+				json_answer.emplace_back(std::move(answer));
+
+			}
+			else if (request.at("type"s).AsString() == "Stop"s) {
+
+				try {
+					const std::unordered_set<Bus*>& buses = handler.GetBusesByStop(request.at("name").AsString());
+					Node answer = json_create::CreateJsonElem(buses, request_id);
+					json_answer.emplace_back(std::move(answer));
+				}
+				catch (...) {
+					json_answer.emplace_back(std::move(json_create::NotFound(request_id)));
+					continue;
+				}
+			}
+			else {
+				json::Node map = ReadMapRequest(handler, request_id);
+				json_answer.emplace_back(std::move(map));
+			}
+		}
+		return Builder{}.Value(json_answer).Build();
+	}
 
 	renderer::Settings ReadSettings(const Document& json_doc) {
 
-		const Dict& dict = json_doc.GetRoot().AsMap().at("render_settings").AsMap();
+		const Dict& dict = json_doc.GetRoot().AsDict().at("render_settings").AsDict();
 
 		renderer::Settings settings;
 
@@ -195,47 +234,78 @@ namespace json_reader {
 		return settings;
 	}
 
-	Dict ReadMapRequest(const RequestHandler& rh) {
+	json::Node ReadMapRequest(const RequestHandler& rh, const int request_id) {
 
 		std::ostringstream oss;
 		const svg::Document constructed_map = rh.RenderMap();
 		constructed_map.Render(oss);
 
-		return { {"map"s, Node(oss.str())} };
+		return Builder{}.StartDict().Key("map"s).Value(oss.str()).Key("request_id"s).Value(request_id).EndDict().Build();
 	}
 
 
 	namespace json_create {
 
-		Dict CreateJsonElem(const BusStat& stat, const int request_id) {
-			Dict answer;
-			answer["curvature"s] = Node(stat.curvature);
+		Node CreateJsonElem(const BusStat& stat, const int request_id) {
+			Node answer = json::Builder{}
+				.StartDict()
+					.Key("curvature"s)
+						.Value(stat.curvature)
+					.Key("request_id"s)
+						.Value(request_id)
+					.Key("route_length"s)
+						.Value(stat.route_length)
+					.Key("stop_count"s)
+						.Value(static_cast<int>(stat.stops_count))
+					.Key("unique_stop_count"s)
+						.Value(static_cast<int>(stat.unique_stops_count))
+				.EndDict()
+				.Build()
+			;
+
+			/*answer["curvature"s] = Node(stat.curvature);
 			answer["request_id"s] = Node(request_id);
 			answer["route_length"s] = Node(stat.route_length);
 			answer["stop_count"s] = Node(static_cast<int>(stat.stops_count));
-			answer["unique_stop_count"] = Node(static_cast<int>(stat.unique_stops_count));
+			answer["unique_stop_count"] = Node(static_cast<int>(stat.unique_stops_count));*/
 			return answer;
 		}
 
-		Dict CreateJsonElem(const std::unordered_set<Bus*>& buses, const int request_id) {
-			Dict answer;			
+		Node CreateJsonElem(const std::unordered_set<Bus*>& buses, const int request_id) {
 			Array buses_ar;
+
 			buses_ar.reserve(buses.size());
 			for (const auto& bus : buses) {
-				buses_ar.push_back(Node(bus->bus_name));
+				buses_ar.emplace_back(bus->bus_name);
 			}
+			//Array buses_ar_builded = const_cast<Array&>(buses_ar.EndArray().Build().AsArray());
+
 			std::sort(buses_ar.begin(), buses_ar.end(), [](const Node& lhs, const Node& rhs) {
 				return lhs.AsString() < rhs.AsString();
 				});
-			answer["buses"] = Node(buses_ar);
-			answer["request_id"] = Node(request_id);
+			Node answer = Builder{}
+				.StartDict()
+					.Key("buses"s)
+						.Value(buses_ar)
+					.Key("request_id"s)
+						.Value(request_id)
+				.EndDict()
+				.Build()
+			;
 			return answer;
 		}
 
-		Dict NotFound(const int request_id) {
-			Dict answer;
-			answer["error_message"s] = Node("not found"s);
-			answer["request_id"s] = Node(request_id);
+		Node NotFound(const int request_id) {
+
+			Node answer = Builder{}
+				.StartDict()
+					.Key("error_message"s)
+						.Value("not found"s)
+					.Key("request_id"s)
+						.Value(request_id)
+				.EndDict()
+				.Build()
+			;
 			return answer;
 		}
 
@@ -244,7 +314,7 @@ namespace json_reader {
 
 	void PrintAnswer(const Document& json_doc, RequestHandler& handler, std::ostream& out) {
 		const Document doc = Document{ HandleRequest(json_doc, handler) };
-		
+
 		Print(doc, out);
 	}
 }
