@@ -21,12 +21,13 @@ int main() {
 	
 	TransportCatalogue catalogue_;
 
-	
-	json::Document doc = json_reader::JsonRead(cin);
+	json_reader::JSONReader j_reader(catalogue_);
 
-	json_reader::FillTransportCatalogue(doc, catalogue_);
+	json::Document doc = j_reader.JsonRead(cin);
 
-	renderer::Settings map_settings = json_reader::ReadSettings(doc);
+	j_reader.FillTransportCatalogue(doc);
+
+	renderer::Settings map_settings = j_reader.ReadWriteSettings(doc);
 
 	std::deque<Stop> used_stops;
 
@@ -49,7 +50,7 @@ int main() {
 
 	RequestHandler rh(catalogue_, mr);
 
-	json_reader::PrintAnswer(doc, rh, std::cout);
+	j_reader.PrintAnswer(doc, rh, std::cout);
 
 
 }
