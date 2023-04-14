@@ -4,6 +4,7 @@
 #include <algorithm>
 #include "map_renderer.h"
 #include "json_builder.h"
+#include <memory>
 
 using namespace std::literals;
 
@@ -111,6 +112,18 @@ namespace json_reader {
 					continue;
 				}
 			}
+			else if (request.at("type"s).AsString() == "Route"s) {
+
+				const auto route_info = handler.BuildRoute(request.at("from"s).AsString(), request.at("to"s).AsString());
+				if (!route_info) {
+					Node answer = NotFound(request_id);
+					json_answer.push_back(std::move(answer));
+					continue;
+				}
+
+				Node answer = CreateJsonRouteAnswer(handler, *route_info, request_id);
+				json_answer.push_back(std::move(answer));
+			}
 			else {
 				json::Node map = ReadMapRequest(handler, request_id);
 				json_answer.emplace_back(std::move(map));
@@ -204,6 +217,65 @@ namespace json_reader {
 		constructed_map.Render(oss);
 
 		return Builder{}.StartDict().Key("map"s).Value(oss.str()).Key("request_id"s).Value(request_id).EndDict().Build();
+	}
+
+	RoutingSettings JSONReader::ReadRoutingSettings(const Document& json_doc) const {
+
+		const Dict& settings = json_doc.GetRoot().AsDict().at("routing_settings"s).AsDict();
+
+		return {settings.at("bus_velocity"s).AsDouble(), settings.at("bus_wait_time"s).AsDouble()};
+
+	}
+
+	Node JSONReader::CreateJsonRouteAnswer(const RequestHandler& handler, const graph::Router<double>::RouteInfo& route_info, const int request_id) const {
+
+		std::unique_ptr<Builder> answer = std::make_unique<Builder>();
+		answer->StartDict()
+			.Key("request_id"s)
+			.Value(request_id)
+			.Key("total_time"s)
+			.Value(route_info.weight)
+			.Key("items"s)
+			.StartArray();
+
+		//std::vector<Node> items;
+
+		for (const graph::EdgeId edge_id : route_info.edges) {
+			const EdgeInfo info = handler.GetEdgeInfo(edge_id);
+			if (std::holds_alternative<WaitEdge>(info)) {
+				const auto wait_info = std::get<WaitEdge>(info);
+				answer->StartDict()
+					.Key("type"s)
+					.Value("Wait"s)
+					.Key("stop_name"s)
+					.Value(std::string(wait_info.stop_name))
+					.Key("time"s)
+					.Value(wait_info.time)
+					.EndDict();
+				//items.push_back(std::move(n)); 
+			}
+			else if (std::holds_alternative<BusEdge>(info)) {
+				const auto bus_info = std::get<BusEdge>(info);
+				answer->StartDict()
+					.Key("type"s)
+					.Value("Bus"s)
+					.Key("bus"s)
+					.Value(std::string(bus_info.bus_name))
+					.Key("span_count"s)
+					.Value(bus_info.span_count)
+					.Key("time"s)
+					.Value(bus_info.time)
+					.EndDict();
+					//.Build();
+				//items.push_back(std::move(n));
+			}
+			else {
+				throw;
+			}
+		}
+
+		return answer->EndArray().EndDict().Build();
+
 	}
 
 	Node JSONReader::CreateJsonElem(const BusStat& stat, const int request_id) const {

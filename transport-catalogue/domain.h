@@ -2,6 +2,7 @@
 #include "geo.h"
 #include <string>
 #include <vector>
+#include "graph.h"
 
 using namespace geo;
 
@@ -17,7 +18,7 @@ struct Stop
 struct StopPairHasher
 {
 	static const int N = 42;
-	std::size_t operator() (const std::pair<Stop*, Stop*> pr1) const;
+	std::size_t operator() (const std::pair<const Stop*,  const Stop*> pr1) const;
 	std::hash<double> hasher;
 };
 
@@ -48,4 +49,27 @@ struct BusStat
 	size_t unique_stops_count;
 };
 
+struct StopGraphContain {
 
+	const Stop& stop;
+	graph::VertexId start_waiting;
+	graph::VertexId end_waiting;
+
+};
+
+struct RoutingSettings {
+	double speed;
+	double wait_time;
+};
+
+struct WaitEdge {
+	std::string_view stop_name;
+	double time;
+};
+
+struct BusEdge
+{
+	std::string_view bus_name;
+	int span_count;
+	double time;
+};

@@ -25,6 +25,8 @@ namespace json_reader {
 		
 		json::Node ReadMapRequest(const RequestHandler& rh, const int request_id) const;
 
+		RoutingSettings ReadRoutingSettings(const Document& json_doc) const;
+
 		void PrintAnswer(const Document& json_doc, RequestHandler& handler, std::ostream& out);
 
 	private:
@@ -32,6 +34,9 @@ namespace json_reader {
 
 		Node CreateJsonElem(const BusStat& stat, const int request_id) const;
 		Node CreateJsonElem(const std::unordered_set<Bus*>& buses, const int request_id) const;
+
+		Node CreateJsonRouteAnswer(const RequestHandler& handler, const graph::Router<double>::RouteInfo& route_info, const int request_id) const;
+
 		Node NotFound(const int request_id) const;
 	};
 	

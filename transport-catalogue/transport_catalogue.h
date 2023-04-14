@@ -33,7 +33,7 @@ public:
 
 	void AddDistance(std::string_view root_stop_name, const std::vector<std::pair<std::string_view, int>>& stopname_to_dist);
 
-	int GetDistance(const std::pair<Stop*, Stop*> stops_between) const;
+	int GetDistance(const std::pair<const Stop*, const Stop*> stops_between) const;
 
 	void AddRouteLength(std::string_view name, RouteLengthInformation length);
 
@@ -47,7 +47,7 @@ private:
 	std::deque<Bus> buses_original_storage_;
 	std::unordered_map<std::string_view, Bus*> busname_to_bus_;
 	std::unordered_map<Stop*, std::unordered_set<Bus*>> stop_to_bus_;
-	std::unordered_map<std::pair<Stop*, Stop*>, int, StopPairHasher> stops_to_distance_;
+	std::unordered_map<std::pair<const Stop*, const Stop*>, int, StopPairHasher> stops_to_distance_;
 	std::unordered_map<std::string_view, RouteLengthInformation> route_length_information_;
 
 	

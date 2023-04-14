@@ -9,7 +9,7 @@ bool Stop::empty() const {
 	return stop_name.empty();
 }
 
-std::size_t StopPairHasher::operator() (const std::pair<Stop*, Stop*> pr1) const {
+std::size_t StopPairHasher::operator() (const std::pair<const Stop*, const Stop*> pr1) const {
 	size_t h1 = hasher(pr1.first->cooradinates.lat * N);
 	size_t h2 = hasher(pr1.first->cooradinates.lng * (N * N));
 	size_t h3 = hasher(pr1.second->cooradinates.lat * (N * N * N));

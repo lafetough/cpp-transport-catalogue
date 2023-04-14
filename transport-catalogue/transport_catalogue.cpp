@@ -58,13 +58,21 @@ void TransportCatalogue::AddDistance(std::string_view root_stop_name, const std:
 	}
 }
 
-int TransportCatalogue::GetDistance(const std::pair<Stop*, Stop*> stops_between) const  {
-	try {
+int TransportCatalogue::GetDistance(const std::pair<const Stop*, const Stop*> stops_between) const  {
+
+	if (stops_to_distance_.count(stops_between)) {
 		return stops_to_distance_.at(stops_between);
 	}
-	catch (...) {
+	else {
 		return stops_to_distance_.at({ stops_between.second, stops_between.first });
 	}
+
+	//try {
+	//	return stops_to_distance_.at(stops_between);
+	//}
+	//catch (...) {
+	//	return stops_to_distance_.at({ stops_between.second, stops_between.first });
+	//}
 }	
 
 void TransportCatalogue::AddRouteLength(std::string_view name, RouteLengthInformation length) {

@@ -29,6 +29,15 @@ svg::Document RequestHandler::RenderMap() const {
     return mr_.RenderObj(tc_);
 }
 
+const std::optional<graph::Router<double>::RouteInfo> RequestHandler::BuildRoute(const std::string_view from, const std::string_view to) const {
+    return router_.Build(router_.GetStopVertexInfo(from).start_waiting, router_.GetStopVertexInfo(to).start_waiting);
+    //return router_.Build(from, to);
+}
+
+const EdgeInfo& RequestHandler::GetEdgeInfo(const graph::EdgeId id) const {
+    return router_.GetEdgeInfoByEdgeId(id);
+}
+
 /*
  * Здесь можно было бы разместить код обработчика запросов к базе, содержащего логику, которую не
  * хотелось бы помещать ни в transport_catalogue, ни в json reader.
