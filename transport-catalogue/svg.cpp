@@ -114,7 +114,7 @@ namespace svg {
         }
         out << "\"";
         RenderAttrs(out);
-        out << " />"sv;
+        out << "/>"sv;
     }
 
     // ---------- Text ------------------

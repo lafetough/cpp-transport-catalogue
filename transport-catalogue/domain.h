@@ -32,7 +32,7 @@ struct Bus
 };
 
 struct RouteLengthInformation {
-	int route_lenght;
+    double route_lenght;
 	double curvature;
 
 	bool operator==(const RouteLengthInformation& other) const {
@@ -44,7 +44,7 @@ struct RouteLengthInformation {
 struct BusStat
 {
 	double curvature;
-	int route_length;
+    double route_length;
 	size_t stops_count;
 	size_t unique_stops_count;
 };
@@ -72,4 +72,8 @@ struct BusEdge
 	std::string_view bus_name;
 	int span_count;
 	double time;
+};
+
+struct SerializingSettings {
+    std::string file_name;
 };

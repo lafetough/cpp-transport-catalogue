@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package serial;
+
+import "map_renderer.proto";
+
+//Not used yet---------------
+message RoutingSettings {
+    int32 bus_velocity = 1;
+    int32 bus_wait_time = 2;
+}
+
+
+//Not_used_yet----------------
+
+message StopList{
+    message Stop {
+        string name = 1;
+        double lat = 2;
+        double lng = 3;
+        uint32 id = 4;
+    }
+    repeated Stop stop_storage = 1;
+}
+
+message BusList{
+    message Bus {
+        string name = 1;
+        repeated uint32 stops_id = 2;
+        bool is_rounded = 3;
+        uint32 id = 4;
+    }
+    repeated Bus bus_storage = 1;
+}
+
+
+message StopsToDist {
+    message StopIdPair {
+        uint32 first_stop = 1;
+        uint32 last_stop = 2;
+    }
+    StopIdPair stops_between = 1;
+    double dist = 2;
+}
+
+message RouteInfo {
+    double route_lenght = 1;
+    double curvuture = 2;
+}
+
+message BusIDToRouteInfo {
+    map<uint32, RouteInfo> route_info = 1;
+}
+
+
+message TransportCatalogue {
+    StopList stop_storage = 1;
+    BusList bus_storage = 2;
+    //StopToBus stopid_to_busid = 3;
+    repeated StopsToDist stops_to_dist = 4;
+    BusIDToRouteInfo route_info = 5;
+
+    //Not_used_yet
+    RenderSettings render_settings = 6;
+    RoutingSettings routing_settings = 7;
+}
+
+
+

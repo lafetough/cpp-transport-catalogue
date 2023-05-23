@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "domain.h"
 #include <set>
+#include <cmath>
 
 namespace renderer {
 
@@ -39,10 +40,10 @@ namespace renderer {
 			max_lat_ = top_it->cooradinates.lat;
 
 			// Вычисляем коэффициент масштабирования вдоль координаты x
-			std::optional<double> width_zoom;
-			if (!IsZero(max_lon - min_lon_)) {
-				width_zoom = (max_width - 2 * padding) / (max_lon - min_lon_);
-			}
+            std::optional<double> width_zoom;
+            if (!IsZero(max_lon - min_lon_)) {
+                width_zoom = (max_width - 2 * padding) / (max_lon - min_lon_);
+            }
 
 			// Вычисляем коэффициент масштабирования вдоль координаты y
 			std::optional<double> height_zoom;
@@ -109,9 +110,12 @@ namespace renderer {
 	class MapRenderer {
 	public:
 
-		MapRenderer(Settings& settings, SphereProjector& projector);
+        MapRenderer(const Settings& settings, const SphereProjector& projector);
 
 		svg::Document RenderObj(const TransportCatalogue& catalogue_);
+
+        const Settings& GetSettings() const;
+        const SphereProjector& GetProjector() const;
 
 
 	private:

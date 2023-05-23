@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package serial;
+
+message Weight{
+    double weight_d = 1;
+    uint32 weitht_i = 2;
+}
+
+message Edge {
+
+    uint32 from = 1;
+    uint32 to = 2;
+
+
+}
+
+
+message Graph {
+
+
+
+
+}

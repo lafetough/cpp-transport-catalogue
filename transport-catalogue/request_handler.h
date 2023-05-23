@@ -10,7 +10,7 @@
 class RequestHandler {
 public:
 
-    RequestHandler(const TransportCatalogue& tc, renderer::MapRenderer& mr, const TransportRouter& router )
+    RequestHandler(const TransportCatalogue* tc, renderer::MapRenderer* mr, const TransportRouter* router )
         :tc_(tc), mr_(mr), router_(router)
     {}
 
@@ -25,8 +25,8 @@ public:
     const EdgeInfo& GetEdgeInfo(const graph::EdgeId id) const;
 
 private:
-    const TransportCatalogue& tc_;
-    renderer::MapRenderer& mr_;
-    const TransportRouter& router_;
+    const TransportCatalogue* tc_;
+    renderer::MapRenderer* mr_;
+    const TransportRouter* router_;
 };
 

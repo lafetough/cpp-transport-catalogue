@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package serial;
+
+message Offset {
+    double x = 1;
+    double y = 2;
+}
+
+message RGB {
+    uint32 r = 1;
+    uint32 g = 2;
+    uint32 b = 3;
+}
+
+message RGBA {
+    RGB rgb = 1;
+    double a = 2;
+}
+
+message SolidColor {
+    string color = 1;
+}
+
+message Color {
+    RGB rgb = 1;
+    RGBA rgba = 2;
+    SolidColor solid_color = 3;
+}

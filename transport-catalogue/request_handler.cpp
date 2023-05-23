@@ -4,17 +4,17 @@
 
 
 const std::unordered_set<Bus*>& RequestHandler::GetBusesByStop(const std::string_view stop_name) const {
-	return tc_.GetBusesByStop(stop_name);
+    return tc_->GetBusesByStop(stop_name);
 }
 
 std::optional<BusStat> RequestHandler::GetBusStat(const std::string_view& bus_name) const {
-    const Bus& bus = tc_.GetBus(bus_name);
+    const Bus& bus = tc_->GetBus(bus_name);
     if (bus.stops_on_route.size() == 0) {
         return {};
     }
 
     std::unordered_set<Stop*> unique_stops(bus.stops_on_route.begin(), bus.stops_on_route.end());
-    const auto& route = tc_.GetRouteLength(bus.bus_name);
+    const auto& route = tc_->GetRouteLength(bus.bus_name);
     BusStat stat = {
         route.curvature,
         //0,
@@ -26,16 +26,16 @@ std::optional<BusStat> RequestHandler::GetBusStat(const std::string_view& bus_na
 }
 
 svg::Document RequestHandler::RenderMap() const {
-    return mr_.RenderObj(tc_);
+    return mr_->RenderObj(*tc_);
 }
 
 const std::optional<graph::Router<double>::RouteInfo> RequestHandler::BuildRoute(const std::string_view from, const std::string_view to) const {
-    return router_.Build(router_.GetStopVertexInfo(from).start_waiting, router_.GetStopVertexInfo(to).start_waiting);
+    return router_->Build(router_->GetStopVertexInfo(from).start_waiting, router_->GetStopVertexInfo(to).start_waiting);
     //return router_.Build(from, to);
 }
 
 const EdgeInfo& RequestHandler::GetEdgeInfo(const graph::EdgeId id) const {
-    return router_.GetEdgeInfoByEdgeId(id);
+    return router_->GetEdgeInfoByEdgeId(id);
 }
 
 /*

@@ -1,6 +1,8 @@
 #include "map_renderer.h"
 
-svg::Point renderer::SphereProjector::operator()(geo::Coordinates coords) const {
+using namespace renderer;
+
+svg::Point SphereProjector::operator()(geo::Coordinates coords) const {
     return {
         (coords.lng - min_lon_) * zoom_coeff_ + padding_,
         (max_lat_ - coords.lat) * zoom_coeff_ + padding_
@@ -11,11 +13,11 @@ bool renderer::IsZero(double value) {
     return std::abs(value) < EPSILON;
 }
 
-renderer::MapRenderer::MapRenderer(Settings& settings, SphereProjector& projector)
+MapRenderer::MapRenderer(const Settings& settings, const SphereProjector& projector)
     :settings_(std::move(settings)), projector_(std::move(projector))
 {}
 
-void renderer::MapRenderer::AddText(const Bus* bus, svg::Document& doc) {
+void MapRenderer::AddText(const Bus* bus, svg::Document& doc) {
 
     svg::Text template_txt;
 
@@ -72,7 +74,7 @@ void renderer::MapRenderer::AddText(const Bus* bus, svg::Document& doc) {
     }
 }
 
-void renderer::MapRenderer::AddText(const Stop* stop, svg::Document& doc) {
+void MapRenderer::AddText(const Stop* stop, svg::Document& doc) {
     svg::Text template_txt;
     template_txt.SetPosition(projector_(stop->cooradinates))
         .SetOffset(settings_.stop_label_offset)
@@ -94,7 +96,7 @@ void renderer::MapRenderer::AddText(const Stop* stop, svg::Document& doc) {
     doc.AddPtr(std::move(stop_label));
 }
 
-svg::Document renderer::MapRenderer::RenderObj(const TransportCatalogue& catalogue) {
+svg::Document MapRenderer::RenderObj(const TransportCatalogue& catalogue) {
 
     svg::Document doc;
 
@@ -161,3 +163,11 @@ svg::Document renderer::MapRenderer::RenderObj(const TransportCatalogue& catalog
 
     return doc;
 }
+
+const Settings& MapRenderer::GetSettings() const {
+    return settings_;
+}
+const SphereProjector& MapRenderer::GetProjector() const {
+    return projector_;
+}
+
