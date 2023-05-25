@@ -9,6 +9,21 @@ TransportRouter::TransportRouter(RoutingSettings settings, const TransportCatalo
 	router_(FillGraph())
 {}
 
+TransportRouter::TransportRouter(
+    RoutingSettings&& settings,
+    const TransportCatalogue& c,
+    graph::DirectedWeightedGraph<double>&& graph,
+    graph::Router<double>::RoutesInternalData&& iternal_data,
+    std::unordered_map<graph::EdgeId, EdgeInfo>&& edge_info_by_id,
+    std::unordered_map<std::string_view, StopGraphContain>&& stop_vertex_cont)
+
+    :settigns_(std::move(settings)), catalogue_(c),
+    graph_(std::move(graph)), router_(graph_, std::move(iternal_data)),
+    edge_info_by_edge_id_(std::move(edge_info_by_id)),
+    stops_vertex_cont_(std::move(stop_vertex_cont))
+{}
+
+
 const graph::DirectedWeightedGraph<double>& TransportRouter::FillGraph() {
 	MakeWaitEdges();
 
@@ -151,6 +166,10 @@ const std::optional<graph::Router<double>::RouteInfo> TransportRouter::Build(gra
 
 const EdgeInfo& TransportRouter::GetEdgeInfoByEdgeId(const graph::EdgeId id) const {
 	return edge_info_by_edge_id_.at(id);
+}
+
+const graph::Router<double>& TransportRouter::GetRouter() const {
+    return router_;
 }
 
 

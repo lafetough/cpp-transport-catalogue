@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
 
     if (mode == "make_base"sv) {
 
-        std::ifstream json_in("C:/Users/User/Downloads/s14_part2_opentest/s14_2_opentest_3_make_base.json"s);
+        std::ifstream json_in("C:/Users/User/Downloads/s14_part3_opentest/s14_3_opentest_3_make_base.json"s);
 
         //std::ifstream json_in("../transport-catalogue/input_mb.json"s);
 
@@ -89,33 +89,38 @@ int main(int argc, char* argv[]) {
             map_settings.height,
             map_settings.padding);
         renderer::MapRenderer map(map_settings, projector);
-
         RoutingSettings routing_settings = j_handler.ReadRoutingSettings();
-
         TransportRouter router(routing_settings, catalogue);
 
-        TransportSerializer serializer(catalogue, map, routing_settings);
+
+
+
+        TransportSerializer serializer(catalogue, map, routing_settings, router);
 
         std::ofstream out_file(serial_settings.file_name, ios::binary);
         serializer.Serialize(out_file);
+        std::cout << "DOne"s << std::endl;
 
     } else if (mode == "process_requests"sv) {
 
-        std::ifstream json_in("C:/Users/User/Downloads/s14_part2_opentest/s14_2_opentest_3_process_requests.json");
+        std::ifstream json_in("C:/Users/User/Downloads/s14_part3_opentest/s14_3_opentest_3_process_requests.json");
 
         //std::ifstream json_in("../transport-catalogue/input_pr.json"s);
-        TransportDeserializer deserializer;
 
         json::Document json_doc = json_reader::JsonRead(json_in);
 
         SerializingSettings serial_settings = json_reader::ParseSerializeSettings(json_doc);
         std::ifstream in_file(serial_settings.file_name, ios::binary);
 
-        DeserializedContent content = deserializer.Deserialize(in_file);
+        TransportDeserializer deserializer(in_file);
 
-        json_reader::JSONHandler j_handler(json_doc, &content.catalogue );
+        TransportCatalogue catalogue = deserializer.DeserializeCatalogue();
+        renderer::MapRenderer map = deserializer.DeserializeMap(catalogue);
+        TransportRouter transport_router = deserializer.DeserializeRouter(catalogue);
 
-        RequestHandler handler(&content.catalogue, &content.map, nullptr);
+        json_reader::JSONHandler j_handler(json_doc, &catalogue);
+
+        RequestHandler handler(&catalogue, &map, &transport_router);
         std::ofstream out_json("output.json"s);
         j_handler.PrintAnswer(handler, out_json);
 

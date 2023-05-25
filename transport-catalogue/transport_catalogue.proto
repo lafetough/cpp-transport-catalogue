@@ -3,15 +3,7 @@ syntax = "proto3";
 package serial;
 
 import "map_renderer.proto";
-
-//Not used yet---------------
-message RoutingSettings {
-    int32 bus_velocity = 1;
-    int32 bus_wait_time = 2;
-}
-
-
-//Not_used_yet----------------
+import "transport_router.proto";
 
 message StopList{
     message Stop {
@@ -62,7 +54,7 @@ message TransportCatalogue {
 
     //Not_used_yet
     RenderSettings render_settings = 6;
-    RoutingSettings routing_settings = 7;
+    TransportRouter transport_router = 7;
 }
 
 

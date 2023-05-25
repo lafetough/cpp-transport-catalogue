@@ -17,19 +17,6 @@
 
 PROTOBUF_PRAGMA_INIT_SEG
 namespace serial {
-constexpr RoutingSettings::RoutingSettings(
-  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : bus_velocity_(0)
-  , bus_wait_time_(0){}
-struct RoutingSettingsDefaultTypeInternal {
-  constexpr RoutingSettingsDefaultTypeInternal()
-    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
-  ~RoutingSettingsDefaultTypeInternal() {}
-  union {
-    RoutingSettings _instance;
-  };
-};
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT RoutingSettingsDefaultTypeInternal _RoutingSettings_default_instance_;
 constexpr StopList_Stop::StopList_Stop(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : name_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
@@ -154,7 +141,7 @@ constexpr TransportCatalogue::TransportCatalogue(
   , bus_storage_(nullptr)
   , route_info_(nullptr)
   , render_settings_(nullptr)
-  , routing_settings_(nullptr){}
+  , transport_router_(nullptr){}
 struct TransportCatalogueDefaultTypeInternal {
   constexpr TransportCatalogueDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -165,18 +152,11 @@ struct TransportCatalogueDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT TransportCatalogueDefaultTypeInternal _TransportCatalogue_default_instance_;
 }  // namespace serial
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_transport_5fcatalogue_2eproto[11];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_transport_5fcatalogue_2eproto[10];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_transport_5fcatalogue_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_transport_5fcatalogue_2eproto = nullptr;
 
 const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_transport_5fcatalogue_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::serial::RoutingSettings, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::serial::RoutingSettings, bus_velocity_),
-  PROTOBUF_FIELD_OFFSET(::serial::RoutingSettings, bus_wait_time_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::serial::StopList_Stop, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -253,24 +233,22 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_transport_5fcatalogue_2eproto:
   PROTOBUF_FIELD_OFFSET(::serial::TransportCatalogue, stops_to_dist_),
   PROTOBUF_FIELD_OFFSET(::serial::TransportCatalogue, route_info_),
   PROTOBUF_FIELD_OFFSET(::serial::TransportCatalogue, render_settings_),
-  PROTOBUF_FIELD_OFFSET(::serial::TransportCatalogue, routing_settings_),
+  PROTOBUF_FIELD_OFFSET(::serial::TransportCatalogue, transport_router_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, sizeof(::serial::RoutingSettings)},
-  { 7, -1, sizeof(::serial::StopList_Stop)},
-  { 16, -1, sizeof(::serial::StopList)},
-  { 22, -1, sizeof(::serial::BusList_Bus)},
-  { 31, -1, sizeof(::serial::BusList)},
-  { 37, -1, sizeof(::serial::StopsToDist_StopIdPair)},
-  { 44, -1, sizeof(::serial::StopsToDist)},
-  { 51, -1, sizeof(::serial::RouteInfo)},
-  { 58, 65, sizeof(::serial::BusIDToRouteInfo_RouteInfoEntry_DoNotUse)},
-  { 67, -1, sizeof(::serial::BusIDToRouteInfo)},
-  { 73, -1, sizeof(::serial::TransportCatalogue)},
+  { 0, -1, sizeof(::serial::StopList_Stop)},
+  { 9, -1, sizeof(::serial::StopList)},
+  { 15, -1, sizeof(::serial::BusList_Bus)},
+  { 24, -1, sizeof(::serial::BusList)},
+  { 30, -1, sizeof(::serial::StopsToDist_StopIdPair)},
+  { 37, -1, sizeof(::serial::StopsToDist)},
+  { 44, -1, sizeof(::serial::RouteInfo)},
+  { 51, 58, sizeof(::serial::BusIDToRouteInfo_RouteInfoEntry_DoNotUse)},
+  { 60, -1, sizeof(::serial::BusIDToRouteInfo)},
+  { 66, -1, sizeof(::serial::TransportCatalogue)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::serial::_RoutingSettings_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::serial::_StopList_Stop_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::serial::_StopList_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::serial::_BusList_Bus_default_instance_),
@@ -285,8 +263,7 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 
 const char descriptor_table_protodef_transport_5fcatalogue_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\031transport_catalogue.proto\022\006serial\032\022map"
-  "_renderer.proto\">\n\017RoutingSettings\022\024\n\014bu"
-  "s_velocity\030\001 \001(\005\022\025\n\rbus_wait_time\030\002 \001(\005\""
+  "_renderer.proto\032\026transport_router.proto\""
   "s\n\010StopList\022+\n\014stop_storage\030\001 \003(\0132\025.seri"
   "al.StopList.Stop\032:\n\004Stop\022\014\n\004name\030\001 \001(\t\022\013"
   "\n\003lat\030\002 \001(\001\022\013\n\003lng\030\003 \001(\001\022\n\n\002id\030\004 \001(\r\"z\n\007"
@@ -307,17 +284,18 @@ const char descriptor_table_protodef_transport_5fcatalogue_2eproto[] PROTOBUF_SE
   "List\022*\n\rstops_to_dist\030\004 \003(\0132\023.serial.Sto"
   "psToDist\022,\n\nroute_info\030\005 \001(\0132\030.serial.Bu"
   "sIDToRouteInfo\022/\n\017render_settings\030\006 \001(\0132"
-  "\026.serial.RenderSettings\0221\n\020routing_setti"
-  "ngs\030\007 \001(\0132\027.serial.RoutingSettingsb\006prot"
+  "\026.serial.RenderSettings\0221\n\020transport_rou"
+  "ter\030\007 \001(\0132\027.serial.TransportRouterb\006prot"
   "o3"
   ;
-static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_transport_5fcatalogue_2eproto_deps[1] = {
+static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_transport_5fcatalogue_2eproto_deps[2] = {
   &::descriptor_table_map_5frenderer_2eproto,
+  &::descriptor_table_transport_5frouter_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_transport_5fcatalogue_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_transport_5fcatalogue_2eproto = {
-  false, false, 1002, descriptor_table_protodef_transport_5fcatalogue_2eproto, "transport_catalogue.proto", 
-  &descriptor_table_transport_5fcatalogue_2eproto_once, descriptor_table_transport_5fcatalogue_2eproto_deps, 1, 11,
+  false, false, 962, descriptor_table_protodef_transport_5fcatalogue_2eproto, "transport_catalogue.proto", 
+  &descriptor_table_transport_5fcatalogue_2eproto_once, descriptor_table_transport_5fcatalogue_2eproto_deps, 2, 10,
   schemas, file_default_instances, TableStruct_transport_5fcatalogue_2eproto::offsets,
   file_level_metadata_transport_5fcatalogue_2eproto, file_level_enum_descriptors_transport_5fcatalogue_2eproto, file_level_service_descriptors_transport_5fcatalogue_2eproto,
 };
@@ -328,226 +306,6 @@ PROTOBUF_ATTRIBUTE_WEAK const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable
 // Force running AddDescriptors() at dynamic initialization time.
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY static ::PROTOBUF_NAMESPACE_ID::internal::AddDescriptorsRunner dynamic_init_dummy_transport_5fcatalogue_2eproto(&descriptor_table_transport_5fcatalogue_2eproto);
 namespace serial {
-
-// ===================================================================
-
-class RoutingSettings::_Internal {
- public:
-};
-
-RoutingSettings::RoutingSettings(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                         bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
-  if (!is_message_owned) {
-    RegisterArenaDtor(arena);
-  }
-  // @@protoc_insertion_point(arena_constructor:serial.RoutingSettings)
-}
-RoutingSettings::RoutingSettings(const RoutingSettings& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&bus_velocity_, &from.bus_velocity_,
-    static_cast<size_t>(reinterpret_cast<char*>(&bus_wait_time_) -
-    reinterpret_cast<char*>(&bus_velocity_)) + sizeof(bus_wait_time_));
-  // @@protoc_insertion_point(copy_constructor:serial.RoutingSettings)
-}
-
-inline void RoutingSettings::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&bus_velocity_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&bus_wait_time_) -
-    reinterpret_cast<char*>(&bus_velocity_)) + sizeof(bus_wait_time_));
-}
-
-RoutingSettings::~RoutingSettings() {
-  // @@protoc_insertion_point(destructor:serial.RoutingSettings)
-  if (GetArenaForAllocation() != nullptr) return;
-  SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
-}
-
-inline void RoutingSettings::SharedDtor() {
-  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-}
-
-void RoutingSettings::ArenaDtor(void* object) {
-  RoutingSettings* _this = reinterpret_cast< RoutingSettings* >(object);
-  (void)_this;
-}
-void RoutingSettings::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
-void RoutingSettings::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-
-void RoutingSettings::Clear() {
-// @@protoc_insertion_point(message_clear_start:serial.RoutingSettings)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  ::memset(&bus_velocity_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&bus_wait_time_) -
-      reinterpret_cast<char*>(&bus_velocity_)) + sizeof(bus_wait_time_));
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
-}
-
-const char* RoutingSettings::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // int32 bus_velocity = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
-          bus_velocity_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // int32 bus_wait_time = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
-          bus_wait_time_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      default: {
-      handle_unusual:
-        if ((tag == 0) || ((tag & 7) == 4)) {
-          CHK_(ptr);
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
-    }  // switch
-  }  // while
-success:
-  return ptr;
-failure:
-  ptr = nullptr;
-  goto success;
-#undef CHK_
-}
-
-::PROTOBUF_NAMESPACE_ID::uint8* RoutingSettings::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:serial.RoutingSettings)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // int32 bus_velocity = 1;
-  if (this->_internal_bus_velocity() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_bus_velocity(), target);
-  }
-
-  // int32 bus_wait_time = 2;
-  if (this->_internal_bus_wait_time() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_bus_wait_time(), target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:serial.RoutingSettings)
-  return target;
-}
-
-size_t RoutingSettings::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:serial.RoutingSettings)
-  size_t total_size = 0;
-
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // int32 bus_velocity = 1;
-  if (this->_internal_bus_velocity() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_bus_velocity());
-  }
-
-  // int32 bus_wait_time = 2;
-  if (this->_internal_bus_wait_time() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_bus_wait_time());
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
-}
-
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData RoutingSettings::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
-    RoutingSettings::MergeImpl
-};
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RoutingSettings::GetClassData() const { return &_class_data_; }
-
-void RoutingSettings::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message&from) {
-  static_cast<RoutingSettings *>(to)->MergeFrom(
-      static_cast<const RoutingSettings &>(from));
-}
-
-
-void RoutingSettings::MergeFrom(const RoutingSettings& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:serial.RoutingSettings)
-  GOOGLE_DCHECK_NE(&from, this);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from._internal_bus_velocity() != 0) {
-    _internal_set_bus_velocity(from._internal_bus_velocity());
-  }
-  if (from._internal_bus_wait_time() != 0) {
-    _internal_set_bus_wait_time(from._internal_bus_wait_time());
-  }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void RoutingSettings::CopyFrom(const RoutingSettings& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:serial.RoutingSettings)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool RoutingSettings::IsInitialized() const {
-  return true;
-}
-
-void RoutingSettings::InternalSwap(RoutingSettings* other) {
-  using std::swap;
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RoutingSettings, bus_wait_time_)
-      + sizeof(RoutingSettings::bus_wait_time_)
-      - PROTOBUF_FIELD_OFFSET(RoutingSettings, bus_velocity_)>(
-          reinterpret_cast<char*>(&bus_velocity_),
-          reinterpret_cast<char*>(&other->bus_velocity_));
-}
-
-::PROTOBUF_NAMESPACE_ID::Metadata RoutingSettings::GetMetadata() const {
-  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
-      &descriptor_table_transport_5fcatalogue_2eproto_getter, &descriptor_table_transport_5fcatalogue_2eproto_once,
-      file_level_metadata_transport_5fcatalogue_2eproto[0]);
-}
 
 // ===================================================================
 
@@ -827,7 +585,7 @@ void StopList_Stop::InternalSwap(StopList_Stop* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata StopList_Stop::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_transport_5fcatalogue_2eproto_getter, &descriptor_table_transport_5fcatalogue_2eproto_once,
-      file_level_metadata_transport_5fcatalogue_2eproto[1]);
+      file_level_metadata_transport_5fcatalogue_2eproto[0]);
 }
 
 // ===================================================================
@@ -1017,7 +775,7 @@ void StopList::InternalSwap(StopList* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata StopList::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_transport_5fcatalogue_2eproto_getter, &descriptor_table_transport_5fcatalogue_2eproto_once,
-      file_level_metadata_transport_5fcatalogue_2eproto[2]);
+      file_level_metadata_transport_5fcatalogue_2eproto[1]);
 }
 
 // ===================================================================
@@ -1316,7 +1074,7 @@ void BusList_Bus::InternalSwap(BusList_Bus* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata BusList_Bus::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_transport_5fcatalogue_2eproto_getter, &descriptor_table_transport_5fcatalogue_2eproto_once,
-      file_level_metadata_transport_5fcatalogue_2eproto[3]);
+      file_level_metadata_transport_5fcatalogue_2eproto[2]);
 }
 
 // ===================================================================
@@ -1506,7 +1264,7 @@ void BusList::InternalSwap(BusList* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata BusList::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_transport_5fcatalogue_2eproto_getter, &descriptor_table_transport_5fcatalogue_2eproto_once,
-      file_level_metadata_transport_5fcatalogue_2eproto[4]);
+      file_level_metadata_transport_5fcatalogue_2eproto[3]);
 }
 
 // ===================================================================
@@ -1726,7 +1484,7 @@ void StopsToDist_StopIdPair::InternalSwap(StopsToDist_StopIdPair* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata StopsToDist_StopIdPair::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_transport_5fcatalogue_2eproto_getter, &descriptor_table_transport_5fcatalogue_2eproto_once,
-      file_level_metadata_transport_5fcatalogue_2eproto[5]);
+      file_level_metadata_transport_5fcatalogue_2eproto[4]);
 }
 
 // ===================================================================
@@ -1957,7 +1715,7 @@ void StopsToDist::InternalSwap(StopsToDist* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata StopsToDist::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_transport_5fcatalogue_2eproto_getter, &descriptor_table_transport_5fcatalogue_2eproto_once,
-      file_level_metadata_transport_5fcatalogue_2eproto[6]);
+      file_level_metadata_transport_5fcatalogue_2eproto[5]);
 }
 
 // ===================================================================
@@ -2173,7 +1931,7 @@ void RouteInfo::InternalSwap(RouteInfo* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata RouteInfo::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_transport_5fcatalogue_2eproto_getter, &descriptor_table_transport_5fcatalogue_2eproto_once,
-      file_level_metadata_transport_5fcatalogue_2eproto[7]);
+      file_level_metadata_transport_5fcatalogue_2eproto[6]);
 }
 
 // ===================================================================
@@ -2187,7 +1945,7 @@ void BusIDToRouteInfo_RouteInfoEntry_DoNotUse::MergeFrom(const BusIDToRouteInfo_
 ::PROTOBUF_NAMESPACE_ID::Metadata BusIDToRouteInfo_RouteInfoEntry_DoNotUse::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_transport_5fcatalogue_2eproto_getter, &descriptor_table_transport_5fcatalogue_2eproto_once,
-      file_level_metadata_transport_5fcatalogue_2eproto[8]);
+      file_level_metadata_transport_5fcatalogue_2eproto[7]);
 }
 
 // ===================================================================
@@ -2406,7 +2164,7 @@ void BusIDToRouteInfo::InternalSwap(BusIDToRouteInfo* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata BusIDToRouteInfo::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_transport_5fcatalogue_2eproto_getter, &descriptor_table_transport_5fcatalogue_2eproto_once,
-      file_level_metadata_transport_5fcatalogue_2eproto[9]);
+      file_level_metadata_transport_5fcatalogue_2eproto[8]);
 }
 
 // ===================================================================
@@ -2417,7 +2175,7 @@ class TransportCatalogue::_Internal {
   static const ::serial::BusList& bus_storage(const TransportCatalogue* msg);
   static const ::serial::BusIDToRouteInfo& route_info(const TransportCatalogue* msg);
   static const ::serial::RenderSettings& render_settings(const TransportCatalogue* msg);
-  static const ::serial::RoutingSettings& routing_settings(const TransportCatalogue* msg);
+  static const ::serial::TransportRouter& transport_router(const TransportCatalogue* msg);
 };
 
 const ::serial::StopList&
@@ -2436,15 +2194,21 @@ const ::serial::RenderSettings&
 TransportCatalogue::_Internal::render_settings(const TransportCatalogue* msg) {
   return *msg->render_settings_;
 }
-const ::serial::RoutingSettings&
-TransportCatalogue::_Internal::routing_settings(const TransportCatalogue* msg) {
-  return *msg->routing_settings_;
+const ::serial::TransportRouter&
+TransportCatalogue::_Internal::transport_router(const TransportCatalogue* msg) {
+  return *msg->transport_router_;
 }
 void TransportCatalogue::clear_render_settings() {
   if (GetArenaForAllocation() == nullptr && render_settings_ != nullptr) {
     delete render_settings_;
   }
   render_settings_ = nullptr;
+}
+void TransportCatalogue::clear_transport_router() {
+  if (GetArenaForAllocation() == nullptr && transport_router_ != nullptr) {
+    delete transport_router_;
+  }
+  transport_router_ = nullptr;
 }
 TransportCatalogue::TransportCatalogue(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
@@ -2480,10 +2244,10 @@ TransportCatalogue::TransportCatalogue(const TransportCatalogue& from)
   } else {
     render_settings_ = nullptr;
   }
-  if (from._internal_has_routing_settings()) {
-    routing_settings_ = new ::serial::RoutingSettings(*from.routing_settings_);
+  if (from._internal_has_transport_router()) {
+    transport_router_ = new ::serial::TransportRouter(*from.transport_router_);
   } else {
-    routing_settings_ = nullptr;
+    transport_router_ = nullptr;
   }
   // @@protoc_insertion_point(copy_constructor:serial.TransportCatalogue)
 }
@@ -2491,8 +2255,8 @@ TransportCatalogue::TransportCatalogue(const TransportCatalogue& from)
 inline void TransportCatalogue::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&stop_storage_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&routing_settings_) -
-    reinterpret_cast<char*>(&stop_storage_)) + sizeof(routing_settings_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&transport_router_) -
+    reinterpret_cast<char*>(&stop_storage_)) + sizeof(transport_router_));
 }
 
 TransportCatalogue::~TransportCatalogue() {
@@ -2508,7 +2272,7 @@ inline void TransportCatalogue::SharedDtor() {
   if (this != internal_default_instance()) delete bus_storage_;
   if (this != internal_default_instance()) delete route_info_;
   if (this != internal_default_instance()) delete render_settings_;
-  if (this != internal_default_instance()) delete routing_settings_;
+  if (this != internal_default_instance()) delete transport_router_;
 }
 
 void TransportCatalogue::ArenaDtor(void* object) {
@@ -2544,10 +2308,10 @@ void TransportCatalogue::Clear() {
     delete render_settings_;
   }
   render_settings_ = nullptr;
-  if (GetArenaForAllocation() == nullptr && routing_settings_ != nullptr) {
-    delete routing_settings_;
+  if (GetArenaForAllocation() == nullptr && transport_router_ != nullptr) {
+    delete transport_router_;
   }
-  routing_settings_ = nullptr;
+  transport_router_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2597,10 +2361,10 @@ const char* TransportCatalogue::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // .serial.RoutingSettings routing_settings = 7;
+      // .serial.TransportRouter transport_router = 7;
       case 7:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 58)) {
-          ptr = ctx->ParseMessage(_internal_mutable_routing_settings(), ptr);
+          ptr = ctx->ParseMessage(_internal_mutable_transport_router(), ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -2673,12 +2437,12 @@ failure:
         6, _Internal::render_settings(this), target, stream);
   }
 
-  // .serial.RoutingSettings routing_settings = 7;
-  if (this->_internal_has_routing_settings()) {
+  // .serial.TransportRouter transport_router = 7;
+  if (this->_internal_has_transport_router()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessage(
-        7, _Internal::routing_settings(this), target, stream);
+        7, _Internal::transport_router(this), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2732,11 +2496,11 @@ size_t TransportCatalogue::ByteSizeLong() const {
         *render_settings_);
   }
 
-  // .serial.RoutingSettings routing_settings = 7;
-  if (this->_internal_has_routing_settings()) {
+  // .serial.TransportRouter transport_router = 7;
+  if (this->_internal_has_transport_router()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *routing_settings_);
+        *transport_router_);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2780,8 +2544,8 @@ void TransportCatalogue::MergeFrom(const TransportCatalogue& from) {
   if (from._internal_has_render_settings()) {
     _internal_mutable_render_settings()->::serial::RenderSettings::MergeFrom(from._internal_render_settings());
   }
-  if (from._internal_has_routing_settings()) {
-    _internal_mutable_routing_settings()->::serial::RoutingSettings::MergeFrom(from._internal_routing_settings());
+  if (from._internal_has_transport_router()) {
+    _internal_mutable_transport_router()->::serial::TransportRouter::MergeFrom(from._internal_transport_router());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -2802,8 +2566,8 @@ void TransportCatalogue::InternalSwap(TransportCatalogue* other) {
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   stops_to_dist_.InternalSwap(&other->stops_to_dist_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(TransportCatalogue, routing_settings_)
-      + sizeof(TransportCatalogue::routing_settings_)
+      PROTOBUF_FIELD_OFFSET(TransportCatalogue, transport_router_)
+      + sizeof(TransportCatalogue::transport_router_)
       - PROTOBUF_FIELD_OFFSET(TransportCatalogue, stop_storage_)>(
           reinterpret_cast<char*>(&stop_storage_),
           reinterpret_cast<char*>(&other->stop_storage_));
@@ -2812,15 +2576,12 @@ void TransportCatalogue::InternalSwap(TransportCatalogue* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata TransportCatalogue::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_transport_5fcatalogue_2eproto_getter, &descriptor_table_transport_5fcatalogue_2eproto_once,
-      file_level_metadata_transport_5fcatalogue_2eproto[10]);
+      file_level_metadata_transport_5fcatalogue_2eproto[9]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace serial
 PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::serial::RoutingSettings* Arena::CreateMaybeMessage< ::serial::RoutingSettings >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::serial::RoutingSettings >(arena);
-}
 template<> PROTOBUF_NOINLINE ::serial::StopList_Stop* Arena::CreateMaybeMessage< ::serial::StopList_Stop >(Arena* arena) {
   return Arena::CreateMessageInternal< ::serial::StopList_Stop >(arena);
 }

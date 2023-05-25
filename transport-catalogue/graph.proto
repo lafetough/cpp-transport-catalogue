@@ -2,23 +2,17 @@ syntax = "proto3";
 
 package serial;
 
-message Weight{
-    double weight_d = 1;
-    uint32 weitht_i = 2;
-}
-
 message Edge {
 
     uint32 from = 1;
     uint32 to = 2;
+    double weight = 3;
 
+    bool is_waiting = 4;
 
 }
 
-
 message Graph {
-
-
-
-
+    repeated Edge edges = 1;
+    uint32 vertex_amount = 2;
 }
