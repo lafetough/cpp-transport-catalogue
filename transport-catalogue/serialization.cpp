@@ -70,12 +70,6 @@ void print(serial::TransportCatalogue& c) {
 
     }
 
-//    {
-//        const auto& l = c.routing_settings();
-//        std::cerr << "---------------" << std::endl;
-//        std::cerr << "Routing settings: bus_velocity: "s << l.bus_velocity() << " wait_time: "s << l.bus_wait_time() << '\n';
-//        std::cerr << "---------------" << std::endl;
-//    }
 }
 
 
@@ -109,6 +103,8 @@ void TransportSerializer::ParseBus() {
     for (const Bus& bus : catalogue_ref_.GetAllBuses()) {
         serial::BusList::Bus bus_serial = BusToSerialBus(bus, id);
         serialize_file.mutable_bus_storage()->mutable_bus_storage()->Add(std::move(bus_serial));
+        busname_to_id_[bus.bus_name] = id;
+        ++id;
     }
 }
 
@@ -237,7 +233,7 @@ serial::Graph TransportSerializer::ParseGraph() {
     serial::Graph serial_graph;
     for (int i = 0; i < graph.GetEdgeCount(); ++i) {
         serial::Edge edge_serial;
-        InsertEdgesInfo(i); //заполняем мапы
+        InsertEdgesInfo(i); //заполняем мапы TransportRouter'а
         const auto& edge_normal = graph.GetEdge(i);
         edge_serial.set_from(edge_normal.from);
         edge_serial.set_to(edge_normal.to);
@@ -256,20 +252,22 @@ void TransportSerializer::InsertEdgesInfo(graph::EdgeId edge_id) {
     serial::EdgeInfo serial_info;
     if (std::holds_alternative<WaitEdge>(edge_info)) {
         const auto& wait = std::get<WaitEdge>(edge_info);
-        std::string_view stop_name = catalogue_ref_.GetStop(wait.stop_name).stop_name;
-        const auto& vertex_info = router_.GetStopVertexInfo(stop_name);
-        serial_info.mutable_w_e()->set_stop_name(std::string(stop_name));
+        //std::string_view stop_name = catalogue_ref_.GetStop(wait.stop_name).stop_name;
+        const int stop_id = stopname_to_id.at(wait.stop_name);
+        const auto& vertex_info = router_.GetStopVertexInfo(wait.stop_name);
+        serial_info.mutable_w_e()->set_stop_id(stop_id);
         serial_info.mutable_w_e()->set_time(wait.time);
         router_serial->mutable_edge_info_by_edge_id()->insert({edge_id, std::move(serial_info)});
 
         serial::StopGraphContain vertex_info_serial;
         vertex_info_serial.set_start_waiting(vertex_info.start_waiting);
         vertex_info_serial.set_end_waiting(vertex_info.end_waiting);
-        router_serial->mutable_stops_vertex_cont()->insert({std::string(stop_name), std::move(vertex_info_serial)});
+        router_serial->mutable_stops_vertex_cont()->insert({stop_id, std::move(vertex_info_serial)});
 
     }else if (std::holds_alternative<BusEdge>(edge_info)) {
         const auto& bus_edge = std::get<BusEdge>(edge_info);
-        serial_info.mutable_b_e()->set_bus_name(std::string(bus_edge.bus_name));
+        const int bus_id = busname_to_id_.at(bus_edge.bus_name);
+        serial_info.mutable_b_e()->set_bus_id(bus_id);
         serial_info.mutable_b_e()->set_span_count(bus_edge.span_count);
         serial_info.mutable_b_e()->set_time(bus_edge.time);
         router_serial->mutable_edge_info_by_edge_id()->insert({edge_id, std::move(serial_info)});
@@ -297,6 +295,7 @@ serial::Router TransportSerializer::ParseRouter() {
                     d.mutable_prev_edge_id()->set_value(*first_layer[k]->prev_edge);
                 }
                 d.set_weight_val(first_layer[k]->weight);
+                d.set_is_initialized(true);
                 route_iternal_data.at(i).mutable_value()->at(k) = std::move(d);
             }
         }
@@ -327,19 +326,6 @@ TransportRouter TransportDeserializer::DeserializeRouter(const TransportCatalogu
     return ConvertTransportRouter(c);
 }
 
-DeserializedContent TransportDeserializer::Deserialize() {
-
-
-    print(serial_);
-
-    std::unique_ptr<TransportCatalogue> catalogue = std::make_unique<TransportCatalogue>(ConvertTC());
-    std::unique_ptr<renderer::MapRenderer> map = std::make_unique<renderer::MapRenderer>(ConvertMap(*catalogue, ConvertMapSettings()));
-    std::unique_ptr<TransportRouter> router = std::make_unique<TransportRouter>(ConvertTransportRouter(*catalogue));
-
-//    DeserializedContent content{ConvertTC(), ConvertMap(*content.catalogue, ConvertMapSettings()), ConvertTransportRouter(*content.catalogue)};
-
-    return {std::move(catalogue), std::move(map), std::move(router) };
-}
 
 TransportCatalogue TransportDeserializer::ConvertTC() {
 
@@ -351,9 +337,9 @@ TransportCatalogue TransportDeserializer::ConvertTC() {
 
     //Добавление остановок в stop_storage
     for (const auto& stop : serial_.stop_storage().stop_storage()) {
-        Stop s = SerialStopToStop(stop);
-        id_to_stopname_[stop.id()] = stop.name();
-        catalogue.AddStop(std::move(s));
+        Stop* stop_ptr = catalogue.AddStop(SerialStopToStop(stop));
+        id_to_stopname_[stop.id()] = stop_ptr->stop_name;
+        stopname_to_id_[stop_ptr->stop_name] = stop.id();
     }
 
     //Добавление расстояний между остановками
@@ -365,9 +351,9 @@ TransportCatalogue TransportDeserializer::ConvertTC() {
 
     //Добавление автобусов(маршрутов)
     for (const auto& bus : serial_.bus_storage().bus_storage()) {
-
         const Bus* bus_ptr = catalogue.AddBus(SerialBusToBus(bus, catalogue));
         catalogue.AddRouteLength(bus_ptr->bus_name, catalogue.ComputeRouteLength(*bus_ptr));
+        id_to_busname_[bus.id()] = bus_ptr->bus_name;
 
     }
     return catalogue;
@@ -414,58 +400,49 @@ renderer::Settings TransportDeserializer::ConvertMapSettings() const {
     return map_settings;
 }
 
-//Перенести--------------
-
-template<typename Weight>
-graph::Edge<Weight> SerialEdgeToNormal(const serial::Edge& edge_serial) {
-    graph::Edge<Weight> edge_normal;
-    edge_normal.from = edge_serial.from();
-    edge_normal.to = edge_serial.to();
-    edge_normal.is_waiting = edge_serial.is_waiting();
-    edge_normal.weight = edge_serial.weight();
-    return edge_normal;
-}
-
-
-//-----------------------
 
 TransportRouter TransportDeserializer::ConvertTransportRouter(const TransportCatalogue& catalogue) const {
+
+    TransportRouter tr(
+        ConvertRoutingSettings(), catalogue,
+        ConvertGraph(), ConvertIternalData(),
+        ConvertHashEdgeInfoToId(catalogue), ConvertHashStopVertexesCont(catalogue));
+
+    return tr;
+}
+
+std::unordered_map<graph::EdgeId, EdgeInfo> TransportDeserializer::ConvertHashEdgeInfoToId(const TransportCatalogue& catalogue) const {
     const auto& edge_info_by_id = serial_.transport_router().edge_info_by_edge_id();
     std::unordered_map<graph::EdgeId, EdgeInfo> edge_info_by_id_hash;
     for (const auto& [edge_id, edge_info] : edge_info_by_id) {
         EdgeInfo temp;
         if (edge_info.has_b_e()) {
             BusEdge bus_edge_norm;
-            bus_edge_norm.bus_name = edge_info.b_e().bus_name();
+            bus_edge_norm.bus_name = id_to_busname_.at(edge_info.b_e().bus_id());
             bus_edge_norm.span_count = edge_info.b_e().span_count();
             bus_edge_norm.time = edge_info.b_e().time();
             temp = std::move(bus_edge_norm);
         }else if (edge_info.has_w_e()) {
             WaitEdge wait_edge_norm;
-            wait_edge_norm.stop_name = edge_info.w_e().stop_name();
+            wait_edge_norm.stop_name = id_to_stopname_.at(edge_info.w_e().stop_id());
             wait_edge_norm.time = edge_info.w_e().time();
             temp = std::move(wait_edge_norm);
         }
         edge_info_by_id_hash[edge_id] = std::move(temp);
     }
+    return edge_info_by_id_hash;
+}
 
+std::unordered_map<std::string_view, StopGraphContain> TransportDeserializer::ConvertHashStopVertexesCont(const TransportCatalogue& catalogue) const {
     const auto& stops_vertex_cont = serial_.transport_router().stops_vertex_cont();
     std::unordered_map<std::string_view, StopGraphContain> stops_vertex_cont_hash;
 
-    for (const auto& [stop_name, stop_vert_cont] : stops_vertex_cont) {
-        const Stop& stop_ref = catalogue.GetStop(stop_name);
+    for (const auto& [stop_id, stop_vert_cont] : stops_vertex_cont) {
+        const Stop& stop_ref = catalogue.GetStop(id_to_stopname_.at(stop_id));
         StopGraphContain stop_vert = {stop_ref, stop_vert_cont.start_waiting(), stop_vert_cont.end_waiting()};
         stops_vertex_cont_hash.insert({stop_ref.stop_name, std::move(stop_vert)});
     }
-
-    auto a = ConvertIternalData();
-
-    TransportRouter tr(
-        ConvertRoutingSettings(), catalogue,
-        ConvertGraph(), std::move(a),
-        std::move(edge_info_by_id_hash), std::move(stops_vertex_cont_hash));
-
-    return tr;
+    return stops_vertex_cont_hash;
 }
 
 graph::DirectedWeightedGraph<double> TransportDeserializer::ConvertGraph() const {
@@ -493,8 +470,7 @@ graph::Router<double>::RoutesInternalData TransportDeserializer::ConvertIternalD
 
     for (int i = 0; i < router_serial.routes_internal_data_size(); ++i) {
         for (int k = 0; k < router_serial.routes_internal_data().at(i).value_size(); ++k) {
-            if (router_serial.routes_internal_data(i).value(k).IsInitialized()) {
-                //std::optional<graph::Router<double>::RouteInternalData> temp;
+            if (router_serial.routes_internal_data(i).value(k).is_initialized()) {
                 graph::Router<double>::RouteInternalData temp;
                 const auto& elem = router_serial.routes_internal_data(i).value(k);
                 temp.weight = elem.weight_val();
@@ -507,29 +483,6 @@ graph::Router<double>::RoutesInternalData TransportDeserializer::ConvertIternalD
     }
     return data;
 }
-
-//graph::Router<double> TransportDeserializer::ConvertRouter(const graph::DirectedWeightedGraph<double>& graph_ref) const {
-//    const serial::Router router_serial = serial_.transport_router().router();
-//    graph::Router<double>::RoutesInternalData data(
-//        router_serial.routes_internal_data_size(),
-//        std::vector<std::optional<graph::Router<double>::RouteInternalData>>(router_serial.routes_internal_data_size())
-//        );
-
-//    for (int i = 0; i < router_serial.routes_internal_data_size(); ++i) {
-//        for (int k = 0; k < router_serial.routes_internal_data().at(i).value_size(); ++k) {
-//            std::optional<graph::Router<double>::RouteInternalData> temp;
-//            const auto& elem = router_serial.routes_internal_data(i).value(k);
-//            temp->weight = elem.weight_val();
-//            if (elem.has_prev_edge_id()) {
-//                *temp->prev_edge = elem.prev_edge_id().value();
-//            }
-//            data[i][k] = std::move(temp);
-//        }
-//    }
-
-//    graph::Router<double> router(graph_ref, std::move(data));
-//    return std::move(router);
-//}
 
 svg::Color TransportDeserializer::ColorCheck(serial::Color serial_color) const {
     if (serial_color.has_solid_color()) {
@@ -586,184 +539,3 @@ std::pair<std::pair<std::string_view, std::string_view>, double> TransportDeseri
     res = {{first_name, last_name}, stops_to_dist.dist()};
     return res;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//void Serializator::Serialize(std::ostream& out) {
-//    *serial_catalogue_.mutable_stop_storage() = json_ser_->ParseStopList();
-//    *serial_catalogue_.mutable_bus_storage() = json_ser_->ParseBusList();
-//    auto stops_to_dist_cont =  json_ser_->ParseDistance();
-
-//    for (serial::StopsToDist& elem : stops_to_dist_cont) {
-//        *serial_catalogue_.add_stops_to_dist() = std::move(elem);
-//    }
-
-//    try{
-//        *serial_catalogue_.mutable_render_settings() = json_ser_->ParseRenderSettings();
-//    }catch(std::out_of_range) {
-//        *serial_catalogue_.mutable_render_settings() = {};
-//    }
-//    try {
-//        *serial_catalogue_.mutable_routing_settings() = json_ser_->ParseRoutingSettings();
-//    }catch(std::out_of_range) {
-//        *serial_catalogue_.mutable_routing_settings() = {};
-//    }
-
-//    //print(serial_catalogue_);
-
-//   // std::cerr << "Amount of stops at the end of serialization: "s << serial_catalogue_.stop_storage().stop_storage_size() << std::endl;
-//    //std::cerr << "Amount of buses at the end of serialization: "s << serial_catalogue_.bus_storage().bus_storage_size() << std::endl;
-//    serial_catalogue_.SerializeToOstream(&out);
-//}
-
-
-
-//TransportCatalogue Deserializator::Deserialize(std::istream& in) {
-//    serial_catalogue_.ParseFromIstream(&in);
-
-//    //std::cerr << "Amount of stops at the beginning of deserializetion: "s << serial_catalogue_.stop_storage().stop_storage_size() << std::endl;
-//    //std::cerr << "Amount of buses at the beginning of deserializetion: "s << serial_catalogue_.bus_storage().bus_storage_size() << std::endl;
-
-//    //print(serial_catalogue_);
-
-////    std::cerr << "---------------"s << std::endl;
-////    std::cerr << "Transport catalogue content"s << std::endl;
-
-
-//    TransportCatalogue catalogue;
-
-//    const serial::StopList& stop_storage = serial_catalogue_.stop_storage();
-//    //const auto& id_stop_map = stop_storage.id_to_stop();
-//    std::unordered_map<int, std::string_view> id_to_stopname;
-//    std::unordered_map<std::string_view, int> stopname_to_id;
-
-//    //Добавление остановок в stop_storage
-//    for (const auto& stop : stop_storage.stop_storage()) {
-//        catalogue.AddStop({stop.name(), Coordinates{stop.lat(), stop.lng()}});
-//        id_to_stopname[stop.id()] = stop.name();
-//        stopname_to_id[stop.name()] = stop.id();
-//    }
-
-////    const auto& a = catalogue.GetAllStops();
-////    for (const auto& elem : a) {
-////        std::cerr << "Stop: "s << elem.stop_name << std::endl;
-////        //        std::cerr << "Buses to this stop: "s << std::endl;
-////        //        for (const auto& f : catalogue.GetBusesByStop(elem.stop_name)) {
-////        //            std::cerr << "    " << f->bus_name << std::endl;
-////        //        }
-////    }
-
-//    //Добавление расстояний между остановками
-//    const auto& stops_to_dist = serial_catalogue_.stops_to_dist();
-//    for (const auto& elem : stops_to_dist) {
-//        const auto& stop_id_pair = elem.stops_between();
-//        std::string_view first_stop = id_to_stopname.at(stop_id_pair.first_stop());
-//        std::string_view last_stop = id_to_stopname.at(stop_id_pair.last_stop());
-//        catalogue.AddDistance({first_stop, last_stop}, elem.dist());
-//    }
-
-////    const auto& n = catalogue.GetStopsToDist();
-////    for (const auto& [stop_pair, dist] : n) {
-////        std::cerr << "Stop_pair: {"s << stop_pair.first->stop_name << " | "s << stop_pair.second->stop_name << "}, dist: "s << dist << std::endl;
-////    }
-////    std::cerr << "---------------"s << std::endl;
-
-//    //Добавление автобусов(маршрутов) и их информация
-//    const serial::BusList& bus_storage = serial_catalogue_.bus_storage();
-//    for (const auto& bus : bus_storage.bus_storage()) {
-////        std::cerr << "Added bus: Busname: "s << bus.name() << " Stops on route: "s << std::endl;
-
-//        std::vector<Stop*> stops_in_route;
-//        stops_in_route.reserve(bus.stops_id_size());
-
-////        std::cerr << "Stops on route: "s << std::endl;
-
-//        for (int i = 0; i < bus.stops_id_size(); ++i) {
-//            std::string_view stop = id_to_stopname.at(bus.stops_id()[i]);
-//            stops_in_route.push_back(&catalogue.GetStop(stop));
-////            std::cerr << "    "s << stop << std::endl;
-//        }
-
-//        if (!bus.is_rounded()) {
-//            stops_in_route.reserve(bus.stops_id_size() * 2);
-//            for (int k = stops_in_route.size() - 2; k >= 0; --k) {
-//                std::string_view s = id_to_stopname.at(bus.stops_id()[k]);
-//                stops_in_route.push_back(&catalogue.GetStop(s));
-////                std::cerr << "    "s << s << std::endl;
-//            }
-//        }
-
-////        std::cerr << "Is_roundtrip: "s << bus.is_rounded() << std::endl;
-
-//        const Bus* added_bus = catalogue.AddBus({bus.name(), std::move(stops_in_route), bus.is_rounded()});
-
-//        //const auto& route_info = serial_.route_info().route_info().at(id);
-
-//        RouteLengthInformation info = catalogue.ComputeRouteLength(*added_bus);
-
-////        std::cerr << "Route info: route_length: "s << info.route_lenght << " curvuture: "s << info.curvature << std::endl;
-//        catalogue.AddRouteLength(bus.name(), std::move(info));
-////        std::cerr << "---------------"s << std::endl;
-//    }
-
-
-
-////    std::cerr << "Buses" << std::endl;
-////    std::cerr << "---------------"s << std::endl;
-////    const auto& b = catalogue.GetAllBuses();
-////    for (const auto& elem : b) {
-////        std::cerr << "Bus: "s << elem.bus_name << " Stops on route: "s << std::endl;
-////        for(const auto stop : elem.stops_on_route) {
-////            std::cerr << "    " << stop->stop_name << std::endl;
-////        }
-////    }
-
-
-
-//    return catalogue;
-//}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

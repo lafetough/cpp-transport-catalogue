@@ -521,6 +521,7 @@ class RouteInternalData final :
   enum : int {
     kPrevEdgeIdFieldNumber = 2,
     kWeightValFieldNumber = 1,
+    kIsInitializedFieldNumber = 3,
   };
   // .serial.RouteInternalData.EdgeId prev_edge_id = 2;
   bool has_prev_edge_id() const;
@@ -549,6 +550,15 @@ class RouteInternalData final :
   void _internal_set_weight_val(double value);
   public:
 
+  // bool is_initialized = 3;
+  void clear_is_initialized();
+  bool is_initialized() const;
+  void set_is_initialized(bool value);
+  private:
+  bool _internal_is_initialized() const;
+  void _internal_set_is_initialized(bool value);
+  public:
+
   // @@protoc_insertion_point(class_scope:serial.RouteInternalData)
  private:
   class _Internal;
@@ -558,6 +568,7 @@ class RouteInternalData final :
   typedef void DestructorSkippable_;
   ::serial::RouteInternalData_EdgeId* prev_edge_id_;
   double weight_val_;
+  bool is_initialized_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_transport_5frouter_2eproto;
 };
@@ -994,23 +1005,9 @@ class WaitEdge final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kStopNameFieldNumber = 1,
     kTimeFieldNumber = 2,
+    kStopIdFieldNumber = 1,
   };
-  // string stop_name = 1;
-  void clear_stop_name();
-  const std::string& stop_name() const;
-  template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_stop_name(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_stop_name();
-  PROTOBUF_MUST_USE_RESULT std::string* release_stop_name();
-  void set_allocated_stop_name(std::string* stop_name);
-  private:
-  const std::string& _internal_stop_name() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_stop_name(const std::string& value);
-  std::string* _internal_mutable_stop_name();
-  public:
-
   // double time = 2;
   void clear_time();
   double time() const;
@@ -1020,6 +1017,15 @@ class WaitEdge final :
   void _internal_set_time(double value);
   public:
 
+  // uint32 stop_id = 1;
+  void clear_stop_id();
+  ::PROTOBUF_NAMESPACE_ID::uint32 stop_id() const;
+  void set_stop_id(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_stop_id() const;
+  void _internal_set_stop_id(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:serial.WaitEdge)
  private:
   class _Internal;
@@ -1027,8 +1033,8 @@ class WaitEdge final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr stop_name_;
   double time_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 stop_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_transport_5frouter_2eproto;
 };
@@ -1299,31 +1305,17 @@ class BusEdge final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kBusNameFieldNumber = 1,
-    kTimeFieldNumber = 3,
+    kBusIdFieldNumber = 1,
     kSpanCountFieldNumber = 2,
+    kTimeFieldNumber = 3,
   };
-  // string bus_name = 1;
-  void clear_bus_name();
-  const std::string& bus_name() const;
-  template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_bus_name(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_bus_name();
-  PROTOBUF_MUST_USE_RESULT std::string* release_bus_name();
-  void set_allocated_bus_name(std::string* bus_name);
+  // uint32 bus_id = 1;
+  void clear_bus_id();
+  ::PROTOBUF_NAMESPACE_ID::uint32 bus_id() const;
+  void set_bus_id(::PROTOBUF_NAMESPACE_ID::uint32 value);
   private:
-  const std::string& _internal_bus_name() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_bus_name(const std::string& value);
-  std::string* _internal_mutable_bus_name();
-  public:
-
-  // double time = 3;
-  void clear_time();
-  double time() const;
-  void set_time(double value);
-  private:
-  double _internal_time() const;
-  void _internal_set_time(double value);
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_bus_id() const;
+  void _internal_set_bus_id(::PROTOBUF_NAMESPACE_ID::uint32 value);
   public:
 
   // uint32 span_count = 2;
@@ -1335,6 +1327,15 @@ class BusEdge final :
   void _internal_set_span_count(::PROTOBUF_NAMESPACE_ID::uint32 value);
   public:
 
+  // double time = 3;
+  void clear_time();
+  double time() const;
+  void set_time(double value);
+  private:
+  double _internal_time() const;
+  void _internal_set_time(double value);
+  public:
+
   // @@protoc_insertion_point(class_scope:serial.BusEdge)
  private:
   class _Internal;
@@ -1342,9 +1343,9 @@ class BusEdge final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr bus_name_;
-  double time_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 bus_id_;
   ::PROTOBUF_NAMESPACE_ID::uint32 span_count_;
+  double time_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_transport_5frouter_2eproto;
 };
@@ -1561,13 +1562,13 @@ public:
 // -------------------------------------------------------------------
 
 class TransportRouter_StopsVertexContEntry_DoNotUse : public ::PROTOBUF_NAMESPACE_ID::internal::MapEntry<TransportRouter_StopsVertexContEntry_DoNotUse, 
-    std::string, ::serial::StopGraphContain,
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_STRING,
+    ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_UINT32,
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE> {
 public:
   typedef ::PROTOBUF_NAMESPACE_ID::internal::MapEntry<TransportRouter_StopsVertexContEntry_DoNotUse, 
-    std::string, ::serial::StopGraphContain,
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_STRING,
+    ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_UINT32,
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE> SuperType;
   TransportRouter_StopsVertexContEntry_DoNotUse();
   explicit constexpr TransportRouter_StopsVertexContEntry_DoNotUse(
@@ -1575,9 +1576,7 @@ public:
   explicit TransportRouter_StopsVertexContEntry_DoNotUse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
   void MergeFrom(const TransportRouter_StopsVertexContEntry_DoNotUse& other);
   static const TransportRouter_StopsVertexContEntry_DoNotUse* internal_default_instance() { return reinterpret_cast<const TransportRouter_StopsVertexContEntry_DoNotUse*>(&_TransportRouter_StopsVertexContEntry_DoNotUse_default_instance_); }
-  static bool ValidateKey(std::string* s) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(s->data(), static_cast<int>(s->size()), ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::PARSE, "serial.TransportRouter.StopsVertexContEntry.key");
- }
+  static bool ValidateKey(void*) { return true; }
   static bool ValidateValue(void*) { return true; }
   using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
@@ -1723,21 +1722,21 @@ class TransportRouter final :
   ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::EdgeInfo >*
       mutable_edge_info_by_edge_id();
 
-  // map<string, .serial.StopGraphContain> stops_vertex_cont = 4;
+  // map<uint32, .serial.StopGraphContain> stops_vertex_cont = 4;
   int stops_vertex_cont_size() const;
   private:
   int _internal_stops_vertex_cont_size() const;
   public:
   void clear_stops_vertex_cont();
   private:
-  const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::serial::StopGraphContain >&
+  const ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain >&
       _internal_stops_vertex_cont() const;
-  ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::serial::StopGraphContain >*
+  ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain >*
       _internal_mutable_stops_vertex_cont();
   public:
-  const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::serial::StopGraphContain >&
+  const ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain >&
       stops_vertex_cont() const;
-  ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::serial::StopGraphContain >*
+  ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain >*
       mutable_stops_vertex_cont();
 
   // .serial.RoutingSettings routing_settings = 1;
@@ -1790,8 +1789,8 @@ class TransportRouter final :
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE> edge_info_by_edge_id_;
   ::PROTOBUF_NAMESPACE_ID::internal::MapField<
       TransportRouter_StopsVertexContEntry_DoNotUse,
-      std::string, ::serial::StopGraphContain,
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_STRING,
+      ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain,
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_UINT32,
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE> stops_vertex_cont_;
   ::serial::RoutingSettings* routing_settings_;
   ::serial::Router* router_;
@@ -1987,6 +1986,26 @@ inline void RouteInternalData::set_allocated_prev_edge_id(::serial::RouteInterna
   // @@protoc_insertion_point(field_set_allocated:serial.RouteInternalData.prev_edge_id)
 }
 
+// bool is_initialized = 3;
+inline void RouteInternalData::clear_is_initialized() {
+  is_initialized_ = false;
+}
+inline bool RouteInternalData::_internal_is_initialized() const {
+  return is_initialized_;
+}
+inline bool RouteInternalData::is_initialized() const {
+  // @@protoc_insertion_point(field_get:serial.RouteInternalData.is_initialized)
+  return _internal_is_initialized();
+}
+inline void RouteInternalData::_internal_set_is_initialized(bool value) {
+  
+  is_initialized_ = value;
+}
+inline void RouteInternalData::set_is_initialized(bool value) {
+  _internal_set_is_initialized(value);
+  // @@protoc_insertion_point(field_set:serial.RouteInternalData.is_initialized)
+}
+
 // -------------------------------------------------------------------
 
 // RoutesInternalData
@@ -2165,50 +2184,24 @@ Router::routes_internal_data() const {
 
 // WaitEdge
 
-// string stop_name = 1;
-inline void WaitEdge::clear_stop_name() {
-  stop_name_.ClearToEmpty();
+// uint32 stop_id = 1;
+inline void WaitEdge::clear_stop_id() {
+  stop_id_ = 0u;
 }
-inline const std::string& WaitEdge::stop_name() const {
-  // @@protoc_insertion_point(field_get:serial.WaitEdge.stop_name)
-  return _internal_stop_name();
+inline ::PROTOBUF_NAMESPACE_ID::uint32 WaitEdge::_internal_stop_id() const {
+  return stop_id_;
 }
-template <typename ArgT0, typename... ArgT>
-inline PROTOBUF_ALWAYS_INLINE
-void WaitEdge::set_stop_name(ArgT0&& arg0, ArgT... args) {
- 
- stop_name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:serial.WaitEdge.stop_name)
+inline ::PROTOBUF_NAMESPACE_ID::uint32 WaitEdge::stop_id() const {
+  // @@protoc_insertion_point(field_get:serial.WaitEdge.stop_id)
+  return _internal_stop_id();
 }
-inline std::string* WaitEdge::mutable_stop_name() {
-  std::string* _s = _internal_mutable_stop_name();
-  // @@protoc_insertion_point(field_mutable:serial.WaitEdge.stop_name)
-  return _s;
-}
-inline const std::string& WaitEdge::_internal_stop_name() const {
-  return stop_name_.Get();
-}
-inline void WaitEdge::_internal_set_stop_name(const std::string& value) {
+inline void WaitEdge::_internal_set_stop_id(::PROTOBUF_NAMESPACE_ID::uint32 value) {
   
-  stop_name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+  stop_id_ = value;
 }
-inline std::string* WaitEdge::_internal_mutable_stop_name() {
-  
-  return stop_name_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
-}
-inline std::string* WaitEdge::release_stop_name() {
-  // @@protoc_insertion_point(field_release:serial.WaitEdge.stop_name)
-  return stop_name_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
-}
-inline void WaitEdge::set_allocated_stop_name(std::string* stop_name) {
-  if (stop_name != nullptr) {
-    
-  } else {
-    
-  }
-  stop_name_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), stop_name,
-      GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set_allocated:serial.WaitEdge.stop_name)
+inline void WaitEdge::set_stop_id(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_stop_id(value);
+  // @@protoc_insertion_point(field_set:serial.WaitEdge.stop_id)
 }
 
 // double time = 2;
@@ -2279,50 +2272,24 @@ inline void StopGraphContain::set_end_waiting(::PROTOBUF_NAMESPACE_ID::uint32 va
 
 // BusEdge
 
-// string bus_name = 1;
-inline void BusEdge::clear_bus_name() {
-  bus_name_.ClearToEmpty();
+// uint32 bus_id = 1;
+inline void BusEdge::clear_bus_id() {
+  bus_id_ = 0u;
 }
-inline const std::string& BusEdge::bus_name() const {
-  // @@protoc_insertion_point(field_get:serial.BusEdge.bus_name)
-  return _internal_bus_name();
+inline ::PROTOBUF_NAMESPACE_ID::uint32 BusEdge::_internal_bus_id() const {
+  return bus_id_;
 }
-template <typename ArgT0, typename... ArgT>
-inline PROTOBUF_ALWAYS_INLINE
-void BusEdge::set_bus_name(ArgT0&& arg0, ArgT... args) {
- 
- bus_name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:serial.BusEdge.bus_name)
+inline ::PROTOBUF_NAMESPACE_ID::uint32 BusEdge::bus_id() const {
+  // @@protoc_insertion_point(field_get:serial.BusEdge.bus_id)
+  return _internal_bus_id();
 }
-inline std::string* BusEdge::mutable_bus_name() {
-  std::string* _s = _internal_mutable_bus_name();
-  // @@protoc_insertion_point(field_mutable:serial.BusEdge.bus_name)
-  return _s;
-}
-inline const std::string& BusEdge::_internal_bus_name() const {
-  return bus_name_.Get();
-}
-inline void BusEdge::_internal_set_bus_name(const std::string& value) {
+inline void BusEdge::_internal_set_bus_id(::PROTOBUF_NAMESPACE_ID::uint32 value) {
   
-  bus_name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+  bus_id_ = value;
 }
-inline std::string* BusEdge::_internal_mutable_bus_name() {
-  
-  return bus_name_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
-}
-inline std::string* BusEdge::release_bus_name() {
-  // @@protoc_insertion_point(field_release:serial.BusEdge.bus_name)
-  return bus_name_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
-}
-inline void BusEdge::set_allocated_bus_name(std::string* bus_name) {
-  if (bus_name != nullptr) {
-    
-  } else {
-    
-  }
-  bus_name_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), bus_name,
-      GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set_allocated:serial.BusEdge.bus_name)
+inline void BusEdge::set_bus_id(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_bus_id(value);
+  // @@protoc_insertion_point(field_set:serial.BusEdge.bus_id)
 }
 
 // uint32 span_count = 2;
@@ -2743,7 +2710,7 @@ TransportRouter::mutable_edge_info_by_edge_id() {
   return _internal_mutable_edge_info_by_edge_id();
 }
 
-// map<string, .serial.StopGraphContain> stops_vertex_cont = 4;
+// map<uint32, .serial.StopGraphContain> stops_vertex_cont = 4;
 inline int TransportRouter::_internal_stops_vertex_cont_size() const {
   return stops_vertex_cont_.size();
 }
@@ -2753,20 +2720,20 @@ inline int TransportRouter::stops_vertex_cont_size() const {
 inline void TransportRouter::clear_stops_vertex_cont() {
   stops_vertex_cont_.Clear();
 }
-inline const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::serial::StopGraphContain >&
+inline const ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain >&
 TransportRouter::_internal_stops_vertex_cont() const {
   return stops_vertex_cont_.GetMap();
 }
-inline const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::serial::StopGraphContain >&
+inline const ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain >&
 TransportRouter::stops_vertex_cont() const {
   // @@protoc_insertion_point(field_map:serial.TransportRouter.stops_vertex_cont)
   return _internal_stops_vertex_cont();
 }
-inline ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::serial::StopGraphContain >*
+inline ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain >*
 TransportRouter::_internal_mutable_stops_vertex_cont() {
   return stops_vertex_cont_.MutableMap();
 }
-inline ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::serial::StopGraphContain >*
+inline ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain >*
 TransportRouter::mutable_stops_vertex_cont() {
   // @@protoc_insertion_point(field_mutable_map:serial.TransportRouter.stops_vertex_cont)
   return _internal_mutable_stops_vertex_cont();

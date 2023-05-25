@@ -1427,27 +1427,6 @@ CMakeFiles/transport_catalogue.dir/main.cpp.obj
  C:/msys64/mingw64/include/c++/13.1.0/x86_64-w64-mingw32/bits/basic_file.h
  C:/msys64/mingw64/include/c++/13.1.0/x86_64-w64-mingw32/bits/c++io.h
  C:/msys64/mingw64/include/c++/13.1.0/bits/fstream.tcc
- C:/msys64/mingw64/include/c++/13.1.0/execution
- C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_execution_defs.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/algorithm_impl.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/execution_impl.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/memory_impl.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/unseq_backend_simd.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/utils.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/parallel_backend_utils.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/parallel_backend.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/parallel_backend_serial.h
- C:/msys64/mingw64/include/c++/13.1.0/numeric
- C:/msys64/mingw64/include/c++/13.1.0/bits/stl_numeric.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_numeric_defs.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/parallel_impl.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/numeric_impl.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/pstl_config.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/algorithm_fwd.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_algorithm_impl.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/numeric_fwd.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_numeric_impl.h
- C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_memory_impl.h
  C:/msys64/mingw64/include/c++/13.1.0/sstream
  C:/msys64/mingw64/include/c++/13.1.0/bits/sstream.tcc
  C:/msys64/mingw64/include/c++/13.1.0/iomanip

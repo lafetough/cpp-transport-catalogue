@@ -30,6 +30,7 @@ private:
     serial::BusList bus_list_;
     std::unordered_map<int, std::string_view> id_to_stopname_;
     std::unordered_map<std::string_view, int> stopname_to_id;
+    std::unordered_map<std::string_view, int> busname_to_id_;
 
 
     void ParseStop();
@@ -67,7 +68,6 @@ public:
     }
 
     using StopPairsToDistElem = std::pair<std::pair<const Stop*, const Stop*>, double>;
-    DeserializedContent Deserialize();
 
     TransportCatalogue DeserializeCatalogue();
     renderer::MapRenderer DeserializeMap(const TransportCatalogue& c);
@@ -82,7 +82,8 @@ public:
 private:
     serial::TransportCatalogue serial_;
     std::unordered_map<int, std::string_view> id_to_stopname_;
-
+    std::unordered_map<std::string_view, int> stopname_to_id_;
+    std::unordered_map<int, std::string_view> id_to_busname_;
 
 
     TransportCatalogue ConvertTC();
@@ -93,42 +94,22 @@ private:
     graph::DirectedWeightedGraph<double> ConvertGraph() const;
     TransportRouter ConvertTransportRouter(const TransportCatalogue& catalogue) const;
     graph::Router<double>::RoutesInternalData ConvertIternalData() const;
+    std::unordered_map<graph::EdgeId, EdgeInfo> ConvertHashEdgeInfoToId(const TransportCatalogue& catalogue) const;
+    std::unordered_map<std::string_view, StopGraphContain> ConvertHashStopVertexesCont(const TransportCatalogue& catalogue) const;
 
     svg::Color ColorCheck(serial::Color serial_color) const;
 
 };
 
 template<typename Weight>
-graph::Edge<Weight> SerialEdgeToNormal(const serial::Edge& edge_serial);
-
-
-
-
-
-
-
-//class Serializator {
-//public:
-//    Serializator(json_reader::JSONSerializer& s)
-//        :json_ser_(&s)
-//    {}
-
-//    void Serialize(std::ostream& out);
-
-//private:
-//    json_reader::JSONSerializer* json_ser_ = nullptr;
-//    serial::TransportCatalogue serial_catalogue_ ;
-//};
-
-
-//class Deserializator {
-//public:
-
-//    TransportCatalogue Deserialize(std::istream& in);
-
-//private:
-//    serial::TransportCatalogue serial_catalogue_;
-//};
+graph::Edge<Weight> SerialEdgeToNormal(const serial::Edge& edge_serial) {
+    graph::Edge<Weight> edge_normal;
+    edge_normal.from = edge_serial.from();
+    edge_normal.to = edge_serial.to();
+    edge_normal.is_waiting = edge_serial.is_waiting();
+    edge_normal.weight = edge_serial.weight();
+    return edge_normal;
+}
 
 
 

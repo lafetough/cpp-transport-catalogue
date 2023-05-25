@@ -1420,27 +1420,6 @@ CMakeFiles/transport_catalogue.dir/main.cpp.obj: H:/yandex/cpp-transport-catalog
   C:/msys64/mingw64/include/c++/13.1.0/x86_64-w64-mingw32/bits/basic_file.h \
   C:/msys64/mingw64/include/c++/13.1.0/x86_64-w64-mingw32/bits/c++io.h \
   C:/msys64/mingw64/include/c++/13.1.0/bits/fstream.tcc \
-  C:/msys64/mingw64/include/c++/13.1.0/execution \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_execution_defs.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/algorithm_impl.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/execution_impl.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/memory_impl.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/unseq_backend_simd.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/utils.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/parallel_backend_utils.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/parallel_backend.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/parallel_backend_serial.h \
-  C:/msys64/mingw64/include/c++/13.1.0/numeric \
-  C:/msys64/mingw64/include/c++/13.1.0/bits/stl_numeric.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_numeric_defs.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/parallel_impl.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/numeric_impl.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/pstl_config.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/algorithm_fwd.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_algorithm_impl.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/numeric_fwd.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_numeric_impl.h \
-  C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_memory_impl.h \
   C:/msys64/mingw64/include/c++/13.1.0/sstream \
   C:/msys64/mingw64/include/c++/13.1.0/bits/sstream.tcc \
   C:/msys64/mingw64/include/c++/13.1.0/iomanip \
@@ -4065,8 +4044,6 @@ C:/msys64/mingw64/include/sec_api/stralign_s.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/bits/requires_hosted.h:
 
-C:/msys64/mingw64/include/c++/13.1.0/pstl/algorithm_fwd.h:
-
 C:/msys64/mingw64/include/c++/13.1.0/ext/type_traits.h:
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/avx512erintrin.h:
@@ -4139,15 +4116,13 @@ C:/msys64/mingw64/include/_mingw_off_t.h:
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/bmiintrin.h:
 
-C:/msys64/mingw64/include/rpcnterr.h:
-
 C:/msys64/mingw64/include/corecrt_wstdlib.h:
+
+C:/msys64/mingw64/include/rpcnterr.h:
 
 C:/msys64/mingw64/include/_mingw_stat64.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/bits/localefwd.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/pstl/parallel_backend_utils.h:
 
 C:/msys64/mingw64/include/swprintf.inl:
 
@@ -4251,13 +4226,13 @@ C:/msys64/mingw64/include/c++/13.1.0/bits/stl_function.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/ext/concurrence.h:
 
+C:/msys64/mingw64/include/rpcdcep.h:
+
 C:/msys64/mingw64/include/c++/13.1.0/bits/ptr_traits.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/bits/algorithmfwd.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/bits/utility.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/pstl/execution_impl.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/bits/stl_pair.h:
 
@@ -4298,6 +4273,8 @@ C:/msys64/mingw64/include/c++/13.1.0/bits/stl_construct.h:
 C:/msys64/mingw64/include/c++/13.1.0/string_view:
 
 C:/msys64/mingw64/include/c++/13.1.0/bits/functional_hash.h:
+
+C:/msys64/mingw64/include/mmiscapi.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/bits/hash_bytes.h:
 
@@ -4344,8 +4321,6 @@ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/avxvnniintrin.h:
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/avx512dqintrin.h:
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/mm_malloc.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_numeric_defs.h:
 
 C:/msys64/mingw64/include/errno.h:
 
@@ -4489,9 +4464,13 @@ C:/msys64/mingw64/include/c++/13.1.0/bits/hashtable.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/bits/hashtable_policy.h:
 
+C:/msys64/mingw64/include/c++/13.1.0/ext/aligned_buffer.h:
+
 C:/msys64/mingw64/include/rpc.h:
 
-C:/msys64/mingw64/include/c++/13.1.0/ext/aligned_buffer.h:
+C:/msys64/mingw64/include/nb30.h:
+
+C:/msys64/mingw64/include/joystickapi.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/bits/enable_special_members.h:
 
@@ -4525,9 +4504,9 @@ C:/msys64/mingw64/include/c++/13.1.0/tr1/gamma.tcc:
 
 C:/msys64/mingw64/include/c++/13.1.0/tr1/special_function_util.h:
 
-C:/msys64/mingw64/include/mmsystem.h:
-
 C:/msys64/mingw64/include/c++/13.1.0/iomanip:
+
+C:/msys64/mingw64/include/mmsystem.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/tr1/beta_function.tcc:
 
@@ -4604,8 +4583,6 @@ C:/msys64/mingw64/include/c++/13.1.0/utility:
 C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_algorithm_defs.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/bits/stl_relops.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/numeric:
 
 H:/c++_libs/Protobuf/include/google/protobuf/stubs/common.h:
 
@@ -4697,6 +4674,8 @@ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/movdirintrin.h:
 
 H:/c++_libs/Protobuf/include/google/protobuf/stubs/port.h:
 
+C:/msys64/mingw64/include/rpcdce.h:
+
 H:/c++_libs/Protobuf/include/google/protobuf/stubs/stringpiece.h:
 
 C:/msys64/mingw64/include/_mingw_stdarg.h:
@@ -4724,8 +4703,6 @@ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/waitpkgintrin.h:
 H:/yandex/cpp-transport-catalogue/transport-catalogue/request_handler.h:
 
 H:/c++_libs/Protobuf/include/google/protobuf/arena_impl.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_execution_defs.h:
 
 H:/c++_libs/Protobuf/include/google/protobuf/generated_message_table_driven.h:
 
@@ -4781,8 +4758,6 @@ H:/c++_libs/Protobuf/include/google/protobuf/generated_enum_reflection.h:
 
 H:/c++_libs/Protobuf/include/google/protobuf/io/zero_copy_stream_impl_lite.h:
 
-C:/msys64/mingw64/include/c++/13.1.0/pstl/utils.h:
-
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/hresetintrin.h:
 
 H:/c++_libs/Protobuf/include/google/protobuf/stubs/callback.h:
@@ -4819,6 +4794,8 @@ C:/msys64/mingw64/include/apiset.h:
 
 H:/yandex/cpp-transport-catalogue/transport-catalogue/json_reader.cpp:
 
+C:/msys64/mingw64/include/ddeml.h:
+
 H:/yandex/cpp-transport-catalogue/transport-catalogue/json_reader.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/bits/deque.tcc:
@@ -4831,19 +4808,19 @@ H:/yandex/cpp-transport-catalogue/transport-catalogue/transport_router.h:
 
 transport_catalogue.pb.h:
 
-C:/msys64/mingw64/include/playsoundapi.h:
-
 H:/c++_libs/Protobuf/include/google/protobuf/map_entry.h:
+
+C:/msys64/mingw64/include/playsoundapi.h:
 
 H:/c++_libs/Protobuf/include/google/protobuf/map_field_inl.h:
 
 svg.pb.h:
 
-C:/msys64/mingw64/include/c++/13.1.0/x86_64-w64-mingw32/bits/time_members.h:
+transport_router.pb.h:
 
 C:/msys64/mingw64/include/lzexpand.h:
 
-transport_router.pb.h:
+C:/msys64/mingw64/include/c++/13.1.0/x86_64-w64-mingw32/bits/time_members.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/sstream:
 
@@ -4853,45 +4830,11 @@ C:/msys64/mingw64/include/propidl.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/bits/sstream.tcc:
 
-C:/msys64/mingw64/include/c++/13.1.0/pstl/parallel_impl.h:
-
 C:/msys64/mingw64/include/c++/13.1.0/fstream:
 
 C:/msys64/mingw64/include/c++/13.1.0/x86_64-w64-mingw32/bits/basic_file.h:
 
-C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_algorithm_impl.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/execution:
-
-C:/msys64/mingw64/include/c++/13.1.0/pstl/algorithm_impl.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/pstl/memory_impl.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/pstl/unseq_backend_simd.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/pstl/parallel_backend.h:
-
-C:/msys64/mingw64/include/timeapi.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/pstl/parallel_backend_serial.h:
-
-C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/xsaveoptintrin.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/bits/stl_numeric.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/pstl/numeric_impl.h:
-
 C:/msys64/mingw64/include/c++/13.1.0/locale:
-
-map_renderer.pb.cc:
-
-C:/msys64/mingw64/include/synchapi.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/pstl/numeric_fwd.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_numeric_impl.h:
-
-C:/msys64/mingw64/include/c++/13.1.0/pstl/glue_memory_impl.h:
 
 C:/msys64/mingw64/include/c++/13.1.0/bits/locale_facets_nonio.h:
 
@@ -4953,9 +4896,9 @@ C:/msys64/mingw64/include/winefs.h:
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/serializeintrin.h:
 
-C:/msys64/mingw64/include/mmsyscom.h:
-
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/cetintrin.h:
+
+C:/msys64/mingw64/include/mmsyscom.h:
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/cmpccxaddintrin.h:
 
@@ -4981,21 +4924,23 @@ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/tbmintrin.h:
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/uintrintrin.h:
 
+C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/xsaveoptintrin.h:
+
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/mmintrin.h:
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/xmmintrin.h:
-
-C:/msys64/mingw64/include/mmiscapi2.h:
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/emmintrin.h:
 
 C:/msys64/mingw64/include/securitybaseapi.h:
 
+C:/msys64/mingw64/include/mmiscapi2.h:
+
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/smmintrin.h:
 
-C:/msys64/mingw64/include/dde.h:
-
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/wmmintrin.h:
+
+C:/msys64/mingw64/include/dde.h:
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/avxifmaintrin.h:
 
@@ -5087,6 +5032,12 @@ C:/msys64/mingw64/include/profileapi.h:
 
 C:/msys64/mingw64/include/realtimeapiset.h:
 
+map_renderer.pb.cc:
+
+C:/msys64/mingw64/include/synchapi.h:
+
+C:/msys64/mingw64/include/mciapi.h:
+
 C:/msys64/mingw64/include/threadpoollegacyapiset.h:
 
 C:/msys64/mingw64/include/utilapiset.h:
@@ -5105,23 +5056,11 @@ C:/msys64/mingw64/include/reason.h:
 
 C:/msys64/mingw64/include/winnetwk.h:
 
-C:/msys64/mingw64/include/ddeml.h:
-
 C:/msys64/mingw64/include/dlgs.h:
-
-C:/msys64/mingw64/include/mciapi.h:
-
-C:/msys64/mingw64/include/mmiscapi.h:
 
 C:/msys64/mingw64/include/mmeapi.h:
 
-C:/msys64/mingw64/include/joystickapi.h:
-
-C:/msys64/mingw64/include/nb30.h:
-
-C:/msys64/mingw64/include/rpcdce.h:
-
-C:/msys64/mingw64/include/rpcdcep.h:
+C:/msys64/mingw64/include/timeapi.h:
 
 C:/msys64/mingw64/include/rpcnsi.h:
 

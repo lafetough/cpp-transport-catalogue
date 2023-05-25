@@ -45,7 +45,8 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT RouteInternalData_EdgeIdDefault
 constexpr RouteInternalData::RouteInternalData(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : prev_edge_id_(nullptr)
-  , weight_val_(0){}
+  , weight_val_(0)
+  , is_initialized_(false){}
 struct RouteInternalDataDefaultTypeInternal {
   constexpr RouteInternalDataDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -82,8 +83,8 @@ struct RouterDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT RouterDefaultTypeInternal _Router_default_instance_;
 constexpr WaitEdge::WaitEdge(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : stop_name_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
-  , time_(0){}
+  : time_(0)
+  , stop_id_(0u){}
 struct WaitEdgeDefaultTypeInternal {
   constexpr WaitEdgeDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -108,9 +109,9 @@ struct StopGraphContainDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT StopGraphContainDefaultTypeInternal _StopGraphContain_default_instance_;
 constexpr BusEdge::BusEdge(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : bus_name_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
-  , time_(0)
-  , span_count_(0u){}
+  : bus_id_(0u)
+  , span_count_(0u)
+  , time_(0){}
 struct BusEdgeDefaultTypeInternal {
   constexpr BusEdgeDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -195,6 +196,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_transport_5frouter_2eproto::of
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::serial::RouteInternalData, weight_val_),
   PROTOBUF_FIELD_OFFSET(::serial::RouteInternalData, prev_edge_id_),
+  PROTOBUF_FIELD_OFFSET(::serial::RouteInternalData, is_initialized_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::serial::RoutesInternalData, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -213,7 +215,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_transport_5frouter_2eproto::of
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::serial::WaitEdge, stop_name_),
+  PROTOBUF_FIELD_OFFSET(::serial::WaitEdge, stop_id_),
   PROTOBUF_FIELD_OFFSET(::serial::WaitEdge, time_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::serial::StopGraphContain, _internal_metadata_),
@@ -227,7 +229,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_transport_5frouter_2eproto::of
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::serial::BusEdge, bus_name_),
+  PROTOBUF_FIELD_OFFSET(::serial::BusEdge, bus_id_),
   PROTOBUF_FIELD_OFFSET(::serial::BusEdge, span_count_),
   PROTOBUF_FIELD_OFFSET(::serial::BusEdge, time_),
   ~0u,  // no _has_bits_
@@ -270,15 +272,15 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 0, -1, sizeof(::serial::RoutingSettings)},
   { 7, -1, sizeof(::serial::RouteInternalData_EdgeId)},
   { 13, -1, sizeof(::serial::RouteInternalData)},
-  { 20, -1, sizeof(::serial::RoutesInternalData)},
-  { 26, -1, sizeof(::serial::Router)},
-  { 33, -1, sizeof(::serial::WaitEdge)},
-  { 40, -1, sizeof(::serial::StopGraphContain)},
-  { 47, -1, sizeof(::serial::BusEdge)},
-  { 55, -1, sizeof(::serial::EdgeInfo)},
-  { 63, 70, sizeof(::serial::TransportRouter_EdgeInfoByEdgeIdEntry_DoNotUse)},
-  { 72, 79, sizeof(::serial::TransportRouter_StopsVertexContEntry_DoNotUse)},
-  { 81, -1, sizeof(::serial::TransportRouter)},
+  { 21, -1, sizeof(::serial::RoutesInternalData)},
+  { 27, -1, sizeof(::serial::Router)},
+  { 34, -1, sizeof(::serial::WaitEdge)},
+  { 41, -1, sizeof(::serial::StopGraphContain)},
+  { 48, -1, sizeof(::serial::BusEdge)},
+  { 56, -1, sizeof(::serial::EdgeInfo)},
+  { 64, 71, sizeof(::serial::TransportRouter_EdgeInfoByEdgeIdEntry_DoNotUse)},
+  { 73, 80, sizeof(::serial::TransportRouter_StopsVertexContEntry_DoNotUse)},
+  { 82, -1, sizeof(::serial::TransportRouter)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -299,38 +301,39 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 const char descriptor_table_protodef_transport_5frouter_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\026transport_router.proto\022\006serial\032\013graph."
   "proto\">\n\017RoutingSettings\022\024\n\014bus_velocity"
-  "\030\001 \001(\005\022\025\n\rbus_wait_time\030\002 \001(\005\"x\n\021RouteIn"
-  "ternalData\022\022\n\nweight_val\030\001 \001(\001\0226\n\014prev_e"
-  "dge_id\030\002 \001(\0132 .serial.RouteInternalData."
-  "EdgeId\032\027\n\006EdgeId\022\r\n\005value\030\001 \001(\004\">\n\022Route"
-  "sInternalData\022(\n\005value\030\001 \003(\0132\031.serial.Ro"
-  "uteInternalData\"`\n\006Router\022\034\n\005graph\030\001 \001(\013"
-  "2\r.serial.Graph\0228\n\024routes_internal_data\030"
-  "\002 \003(\0132\032.serial.RoutesInternalData\"+\n\010Wai"
-  "tEdge\022\021\n\tstop_name\030\001 \001(\t\022\014\n\004time\030\002 \001(\001\">"
-  "\n\020StopGraphContain\022\025\n\rstart_waiting\030\002 \001("
-  "\r\022\023\n\013end_waiting\030\003 \001(\r\"=\n\007BusEdge\022\020\n\010bus"
-  "_name\030\001 \001(\t\022\022\n\nspan_count\030\002 \001(\r\022\014\n\004time\030"
-  "\003 \001(\001\"S\n\010EdgeInfo\022\037\n\003w_e\030\001 \001(\0132\020.serial."
-  "WaitEdgeH\000\022\036\n\003b_e\030\002 \001(\0132\017.serial.BusEdge"
-  "H\000B\006\n\004info\"\227\003\n\017TransportRouter\0221\n\020routin"
-  "g_settings\030\001 \001(\0132\027.serial.RoutingSetting"
-  "s\022\036\n\006router\030\002 \001(\0132\016.serial.Router\022K\n\024edg"
-  "e_info_by_edge_id\030\003 \003(\0132-.serial.Transpo"
-  "rtRouter.EdgeInfoByEdgeIdEntry\022G\n\021stops_"
-  "vertex_cont\030\004 \003(\0132,.serial.TransportRout"
-  "er.StopsVertexContEntry\032I\n\025EdgeInfoByEdg"
-  "eIdEntry\022\013\n\003key\030\001 \001(\r\022\037\n\005value\030\002 \001(\0132\020.s"
-  "erial.EdgeInfo:\0028\001\032P\n\024StopsVertexContEnt"
-  "ry\022\013\n\003key\030\001 \001(\t\022\'\n\005value\030\002 \001(\0132\030.serial."
-  "StopGraphContain:\0028\001b\006proto3"
+  "\030\001 \001(\005\022\025\n\rbus_wait_time\030\002 \001(\005\"\220\001\n\021RouteI"
+  "nternalData\022\022\n\nweight_val\030\001 \001(\001\0226\n\014prev_"
+  "edge_id\030\002 \001(\0132 .serial.RouteInternalData"
+  ".EdgeId\022\026\n\016is_initialized\030\003 \001(\010\032\027\n\006EdgeI"
+  "d\022\r\n\005value\030\001 \001(\004\">\n\022RoutesInternalData\022("
+  "\n\005value\030\001 \003(\0132\031.serial.RouteInternalData"
+  "\"`\n\006Router\022\034\n\005graph\030\001 \001(\0132\r.serial.Graph"
+  "\0228\n\024routes_internal_data\030\002 \003(\0132\032.serial."
+  "RoutesInternalData\")\n\010WaitEdge\022\017\n\007stop_i"
+  "d\030\001 \001(\r\022\014\n\004time\030\002 \001(\001\">\n\020StopGraphContai"
+  "n\022\025\n\rstart_waiting\030\002 \001(\r\022\023\n\013end_waiting\030"
+  "\003 \001(\r\";\n\007BusEdge\022\016\n\006bus_id\030\001 \001(\r\022\022\n\nspan"
+  "_count\030\002 \001(\r\022\014\n\004time\030\003 \001(\001\"S\n\010EdgeInfo\022\037"
+  "\n\003w_e\030\001 \001(\0132\020.serial.WaitEdgeH\000\022\036\n\003b_e\030\002"
+  " \001(\0132\017.serial.BusEdgeH\000B\006\n\004info\"\227\003\n\017Tran"
+  "sportRouter\0221\n\020routing_settings\030\001 \001(\0132\027."
+  "serial.RoutingSettings\022\036\n\006router\030\002 \001(\0132\016"
+  ".serial.Router\022K\n\024edge_info_by_edge_id\030\003"
+  " \003(\0132-.serial.TransportRouter.EdgeInfoBy"
+  "EdgeIdEntry\022G\n\021stops_vertex_cont\030\004 \003(\0132,"
+  ".serial.TransportRouter.StopsVertexContE"
+  "ntry\032I\n\025EdgeInfoByEdgeIdEntry\022\013\n\003key\030\001 \001"
+  "(\r\022\037\n\005value\030\002 \001(\0132\020.serial.EdgeInfo:\0028\001\032"
+  "P\n\024StopsVertexContEntry\022\013\n\003key\030\001 \001(\r\022\'\n\005"
+  "value\030\002 \001(\0132\030.serial.StopGraphContain:\0028"
+  "\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_transport_5frouter_2eproto_deps[1] = {
   &::descriptor_table_graph_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_transport_5frouter_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_transport_5frouter_2eproto = {
-  false, false, 1068, descriptor_table_protodef_transport_5frouter_2eproto, "transport_router.proto", 
+  false, false, 1089, descriptor_table_protodef_transport_5frouter_2eproto, "transport_router.proto", 
   &descriptor_table_transport_5frouter_2eproto_once, descriptor_table_transport_5frouter_2eproto_deps, 1, 12,
   schemas, file_default_instances, TableStruct_transport_5frouter_2eproto::offsets,
   file_level_metadata_transport_5frouter_2eproto, file_level_enum_descriptors_transport_5frouter_2eproto, file_level_service_descriptors_transport_5frouter_2eproto,
@@ -776,15 +779,17 @@ RouteInternalData::RouteInternalData(const RouteInternalData& from)
   } else {
     prev_edge_id_ = nullptr;
   }
-  weight_val_ = from.weight_val_;
+  ::memcpy(&weight_val_, &from.weight_val_,
+    static_cast<size_t>(reinterpret_cast<char*>(&is_initialized_) -
+    reinterpret_cast<char*>(&weight_val_)) + sizeof(is_initialized_));
   // @@protoc_insertion_point(copy_constructor:serial.RouteInternalData)
 }
 
 inline void RouteInternalData::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&prev_edge_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&weight_val_) -
-    reinterpret_cast<char*>(&prev_edge_id_)) + sizeof(weight_val_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&is_initialized_) -
+    reinterpret_cast<char*>(&prev_edge_id_)) + sizeof(is_initialized_));
 }
 
 RouteInternalData::~RouteInternalData() {
@@ -819,7 +824,9 @@ void RouteInternalData::Clear() {
     delete prev_edge_id_;
   }
   prev_edge_id_ = nullptr;
-  weight_val_ = 0;
+  ::memset(&weight_val_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&is_initialized_) -
+      reinterpret_cast<char*>(&weight_val_)) + sizeof(is_initialized_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -840,6 +847,13 @@ const char* RouteInternalData::_InternalParse(const char* ptr, ::PROTOBUF_NAMESP
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
           ptr = ctx->ParseMessage(_internal_mutable_prev_edge_id(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // bool is_initialized = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
+          is_initialized_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -886,6 +900,12 @@ failure:
         2, _Internal::prev_edge_id(this), target, stream);
   }
 
+  // bool is_initialized = 3;
+  if (this->_internal_is_initialized() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(3, this->_internal_is_initialized(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -912,6 +932,11 @@ size_t RouteInternalData::ByteSizeLong() const {
   // double weight_val = 1;
   if (!(this->_internal_weight_val() <= 0 && this->_internal_weight_val() >= 0)) {
     total_size += 1 + 8;
+  }
+
+  // bool is_initialized = 3;
+  if (this->_internal_is_initialized() != 0) {
+    total_size += 1 + 1;
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -948,6 +973,9 @@ void RouteInternalData::MergeFrom(const RouteInternalData& from) {
   if (!(from._internal_weight_val() <= 0 && from._internal_weight_val() >= 0)) {
     _internal_set_weight_val(from._internal_weight_val());
   }
+  if (from._internal_is_initialized() != 0) {
+    _internal_set_is_initialized(from._internal_is_initialized());
+  }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -966,8 +994,8 @@ void RouteInternalData::InternalSwap(RouteInternalData* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RouteInternalData, weight_val_)
-      + sizeof(RouteInternalData::weight_val_)
+      PROTOBUF_FIELD_OFFSET(RouteInternalData, is_initialized_)
+      + sizeof(RouteInternalData::is_initialized_)
       - PROTOBUF_FIELD_OFFSET(RouteInternalData, prev_edge_id_)>(
           reinterpret_cast<char*>(&prev_edge_id_),
           reinterpret_cast<char*>(&other->prev_edge_id_));
@@ -1425,18 +1453,17 @@ WaitEdge::WaitEdge(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 WaitEdge::WaitEdge(const WaitEdge& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  stop_name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_stop_name().empty()) {
-    stop_name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_stop_name(), 
-      GetArenaForAllocation());
-  }
-  time_ = from.time_;
+  ::memcpy(&time_, &from.time_,
+    static_cast<size_t>(reinterpret_cast<char*>(&stop_id_) -
+    reinterpret_cast<char*>(&time_)) + sizeof(stop_id_));
   // @@protoc_insertion_point(copy_constructor:serial.WaitEdge)
 }
 
 inline void WaitEdge::SharedCtor() {
-stop_name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-time_ = 0;
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&time_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&stop_id_) -
+    reinterpret_cast<char*>(&time_)) + sizeof(stop_id_));
 }
 
 WaitEdge::~WaitEdge() {
@@ -1448,7 +1475,6 @@ WaitEdge::~WaitEdge() {
 
 inline void WaitEdge::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  stop_name_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void WaitEdge::ArenaDtor(void* object) {
@@ -1467,8 +1493,9 @@ void WaitEdge::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  stop_name_.ClearToEmpty();
-  time_ = 0;
+  ::memset(&time_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&stop_id_) -
+      reinterpret_cast<char*>(&time_)) + sizeof(stop_id_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1478,12 +1505,10 @@ const char* WaitEdge::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::i
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // string stop_name = 1;
+      // uint32 stop_id = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          auto str = _internal_mutable_stop_name();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "serial.WaitEdge.stop_name"));
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          stop_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -1523,14 +1548,10 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // string stop_name = 1;
-  if (!this->_internal_stop_name().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_stop_name().data(), static_cast<int>(this->_internal_stop_name().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "serial.WaitEdge.stop_name");
-    target = stream->WriteStringMaybeAliased(
-        1, this->_internal_stop_name(), target);
+  // uint32 stop_id = 1;
+  if (this->_internal_stop_id() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(1, this->_internal_stop_id(), target);
   }
 
   // double time = 2;
@@ -1555,16 +1576,16 @@ size_t WaitEdge::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string stop_name = 1;
-  if (!this->_internal_stop_name().empty()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_stop_name());
-  }
-
   // double time = 2;
   if (!(this->_internal_time() <= 0 && this->_internal_time() >= 0)) {
     total_size += 1 + 8;
+  }
+
+  // uint32 stop_id = 1;
+  if (this->_internal_stop_id() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32Size(
+        this->_internal_stop_id());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1595,11 +1616,11 @@ void WaitEdge::MergeFrom(const WaitEdge& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!from._internal_stop_name().empty()) {
-    _internal_set_stop_name(from._internal_stop_name());
-  }
   if (!(from._internal_time() <= 0 && from._internal_time() >= 0)) {
     _internal_set_time(from._internal_time());
+  }
+  if (from._internal_stop_id() != 0) {
+    _internal_set_stop_id(from._internal_stop_id());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -1618,12 +1639,12 @@ bool WaitEdge::IsInitialized() const {
 void WaitEdge::InternalSwap(WaitEdge* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      &stop_name_, GetArenaForAllocation(),
-      &other->stop_name_, other->GetArenaForAllocation()
-  );
-  swap(time_, other->time_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(WaitEdge, stop_id_)
+      + sizeof(WaitEdge::stop_id_)
+      - PROTOBUF_FIELD_OFFSET(WaitEdge, time_)>(
+          reinterpret_cast<char*>(&time_),
+          reinterpret_cast<char*>(&other->time_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata WaitEdge::GetMetadata() const {
@@ -1870,23 +1891,17 @@ BusEdge::BusEdge(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 BusEdge::BusEdge(const BusEdge& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  bus_name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_bus_name().empty()) {
-    bus_name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_bus_name(), 
-      GetArenaForAllocation());
-  }
-  ::memcpy(&time_, &from.time_,
-    static_cast<size_t>(reinterpret_cast<char*>(&span_count_) -
-    reinterpret_cast<char*>(&time_)) + sizeof(span_count_));
+  ::memcpy(&bus_id_, &from.bus_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&time_) -
+    reinterpret_cast<char*>(&bus_id_)) + sizeof(time_));
   // @@protoc_insertion_point(copy_constructor:serial.BusEdge)
 }
 
 inline void BusEdge::SharedCtor() {
-bus_name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&time_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&span_count_) -
-    reinterpret_cast<char*>(&time_)) + sizeof(span_count_));
+    reinterpret_cast<char*>(&bus_id_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&time_) -
+    reinterpret_cast<char*>(&bus_id_)) + sizeof(time_));
 }
 
 BusEdge::~BusEdge() {
@@ -1898,7 +1913,6 @@ BusEdge::~BusEdge() {
 
 inline void BusEdge::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  bus_name_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void BusEdge::ArenaDtor(void* object) {
@@ -1917,10 +1931,9 @@ void BusEdge::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  bus_name_.ClearToEmpty();
-  ::memset(&time_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&span_count_) -
-      reinterpret_cast<char*>(&time_)) + sizeof(span_count_));
+  ::memset(&bus_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&time_) -
+      reinterpret_cast<char*>(&bus_id_)) + sizeof(time_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1930,12 +1943,10 @@ const char* BusEdge::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::in
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // string bus_name = 1;
+      // uint32 bus_id = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          auto str = _internal_mutable_bus_name();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "serial.BusEdge.bus_name"));
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          bus_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -1982,14 +1993,10 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // string bus_name = 1;
-  if (!this->_internal_bus_name().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_bus_name().data(), static_cast<int>(this->_internal_bus_name().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "serial.BusEdge.bus_name");
-    target = stream->WriteStringMaybeAliased(
-        1, this->_internal_bus_name(), target);
+  // uint32 bus_id = 1;
+  if (this->_internal_bus_id() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(1, this->_internal_bus_id(), target);
   }
 
   // uint32 span_count = 2;
@@ -2020,16 +2027,11 @@ size_t BusEdge::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string bus_name = 1;
-  if (!this->_internal_bus_name().empty()) {
+  // uint32 bus_id = 1;
+  if (this->_internal_bus_id() != 0) {
     total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_bus_name());
-  }
-
-  // double time = 3;
-  if (!(this->_internal_time() <= 0 && this->_internal_time() >= 0)) {
-    total_size += 1 + 8;
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32Size(
+        this->_internal_bus_id());
   }
 
   // uint32 span_count = 2;
@@ -2037,6 +2039,11 @@ size_t BusEdge::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32Size(
         this->_internal_span_count());
+  }
+
+  // double time = 3;
+  if (!(this->_internal_time() <= 0 && this->_internal_time() >= 0)) {
+    total_size += 1 + 8;
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2067,14 +2074,14 @@ void BusEdge::MergeFrom(const BusEdge& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!from._internal_bus_name().empty()) {
-    _internal_set_bus_name(from._internal_bus_name());
-  }
-  if (!(from._internal_time() <= 0 && from._internal_time() >= 0)) {
-    _internal_set_time(from._internal_time());
+  if (from._internal_bus_id() != 0) {
+    _internal_set_bus_id(from._internal_bus_id());
   }
   if (from._internal_span_count() != 0) {
     _internal_set_span_count(from._internal_span_count());
+  }
+  if (!(from._internal_time() <= 0 && from._internal_time() >= 0)) {
+    _internal_set_time(from._internal_time());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -2093,17 +2100,12 @@ bool BusEdge::IsInitialized() const {
 void BusEdge::InternalSwap(BusEdge* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      &bus_name_, GetArenaForAllocation(),
-      &other->bus_name_, other->GetArenaForAllocation()
-  );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(BusEdge, span_count_)
-      + sizeof(BusEdge::span_count_)
-      - PROTOBUF_FIELD_OFFSET(BusEdge, time_)>(
-          reinterpret_cast<char*>(&time_),
-          reinterpret_cast<char*>(&other->time_));
+      PROTOBUF_FIELD_OFFSET(BusEdge, time_)
+      + sizeof(BusEdge::time_)
+      - PROTOBUF_FIELD_OFFSET(BusEdge, bus_id_)>(
+          reinterpret_cast<char*>(&bus_id_),
+          reinterpret_cast<char*>(&other->bus_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata BusEdge::GetMetadata() const {
@@ -2575,7 +2577,7 @@ const char* TransportRouter::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<26>(ptr));
         } else goto handle_unusual;
         continue;
-      // map<string, .serial.StopGraphContain> stops_vertex_cont = 4;
+      // map<uint32, .serial.StopGraphContain> stops_vertex_cont = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
           ptr -= 1;
@@ -2663,44 +2665,33 @@ failure:
     }
   }
 
-  // map<string, .serial.StopGraphContain> stops_vertex_cont = 4;
+  // map<uint32, .serial.StopGraphContain> stops_vertex_cont = 4;
   if (!this->_internal_stops_vertex_cont().empty()) {
-    typedef ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::serial::StopGraphContain >::const_pointer
+    typedef ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain >::const_pointer
         ConstPtr;
-    typedef ConstPtr SortItem;
-    typedef ::PROTOBUF_NAMESPACE_ID::internal::CompareByDerefFirst<SortItem> Less;
-    struct Utf8Check {
-      static void Check(ConstPtr p) {
-        (void)p;
-        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-          p->first.data(), static_cast<int>(p->first.length()),
-          ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-          "serial.TransportRouter.StopsVertexContEntry.key");
-      }
-    };
+    typedef ::PROTOBUF_NAMESPACE_ID::internal::SortItem< ::PROTOBUF_NAMESPACE_ID::uint32, ConstPtr > SortItem;
+    typedef ::PROTOBUF_NAMESPACE_ID::internal::CompareByFirstField<SortItem> Less;
 
     if (stream->IsSerializationDeterministic() &&
         this->_internal_stops_vertex_cont().size() > 1) {
       ::std::unique_ptr<SortItem[]> items(
           new SortItem[this->_internal_stops_vertex_cont().size()]);
-      typedef ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::serial::StopGraphContain >::size_type size_type;
+      typedef ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain >::size_type size_type;
       size_type n = 0;
-      for (::PROTOBUF_NAMESPACE_ID::Map< std::string, ::serial::StopGraphContain >::const_iterator
+      for (::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain >::const_iterator
           it = this->_internal_stops_vertex_cont().begin();
           it != this->_internal_stops_vertex_cont().end(); ++it, ++n) {
         items[static_cast<ptrdiff_t>(n)] = SortItem(&*it);
       }
       ::std::sort(&items[0], &items[static_cast<ptrdiff_t>(n)], Less());
       for (size_type i = 0; i < n; i++) {
-        target = TransportRouter_StopsVertexContEntry_DoNotUse::Funcs::InternalSerialize(4, items[static_cast<ptrdiff_t>(i)]->first, items[static_cast<ptrdiff_t>(i)]->second, target, stream);
-        Utf8Check::Check(&(*items[static_cast<ptrdiff_t>(i)]));
+        target = TransportRouter_StopsVertexContEntry_DoNotUse::Funcs::InternalSerialize(4, items[static_cast<ptrdiff_t>(i)].second->first, items[static_cast<ptrdiff_t>(i)].second->second, target, stream);
       }
     } else {
-      for (::PROTOBUF_NAMESPACE_ID::Map< std::string, ::serial::StopGraphContain >::const_iterator
+      for (::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain >::const_iterator
           it = this->_internal_stops_vertex_cont().begin();
           it != this->_internal_stops_vertex_cont().end(); ++it) {
         target = TransportRouter_StopsVertexContEntry_DoNotUse::Funcs::InternalSerialize(4, it->first, it->second, target, stream);
-        Utf8Check::Check(&(*it));
       }
     }
   }
@@ -2730,10 +2721,10 @@ size_t TransportRouter::ByteSizeLong() const {
     total_size += TransportRouter_EdgeInfoByEdgeIdEntry_DoNotUse::Funcs::ByteSizeLong(it->first, it->second);
   }
 
-  // map<string, .serial.StopGraphContain> stops_vertex_cont = 4;
+  // map<uint32, .serial.StopGraphContain> stops_vertex_cont = 4;
   total_size += 1 *
       ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(this->_internal_stops_vertex_cont_size());
-  for (::PROTOBUF_NAMESPACE_ID::Map< std::string, ::serial::StopGraphContain >::const_iterator
+  for (::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::uint32, ::serial::StopGraphContain >::const_iterator
       it = this->_internal_stops_vertex_cont().begin();
       it != this->_internal_stops_vertex_cont().end(); ++it) {
     total_size += TransportRouter_StopsVertexContEntry_DoNotUse::Funcs::ByteSizeLong(it->first, it->second);
