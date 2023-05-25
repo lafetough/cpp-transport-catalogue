@@ -1,3 +1,0 @@
-H:/yandex/cpp-transport-catalogue/debug/CMakeFiles/transport_catalogue.dir
-H:/yandex/cpp-transport-catalogue/debug/CMakeFiles/edit_cache.dir
-H:/yandex/cpp-transport-catalogue/debug/CMakeFiles/rebuild_cache.dir
